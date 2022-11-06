@@ -1,13 +1,13 @@
-package pers.hd.simplepro;
+package pers.hd.simplepro.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SimpleProApplication {
+public class SimpleProServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SimpleProApplication.class, args);
+        SpringApplication.run(SimpleProServerApplication.class, args);
     }
 
 }
