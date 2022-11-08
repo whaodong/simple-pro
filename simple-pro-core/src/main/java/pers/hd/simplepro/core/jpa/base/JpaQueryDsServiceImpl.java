@@ -19,10 +19,9 @@ import java.util.Optional;
 /**
  * JPA定义实现类
  *
- *@author WangHaoDong
+ * @author WangHaoDong
  */
-public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extends JpaQueryDsDao<T, ID>>
-        implements JpaQueryDsService<T, ID, R> {
+public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extends JpaQueryDsDao<T, ID>> implements JpaQueryDsService<T, ID, R> {
 
     @PersistenceContext
     protected EntityManager em;
@@ -73,11 +72,6 @@ public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extend
     @Override
     public List<T> findAll(Predicate predicate, Sort sort) {
         Iterable<T> iterable = baseRepository.findAll(predicate, sort);
-        if (iterable == null) {
-            throw new NullPointerException();
-        } else {
-
-        }
         List<T> result = Lists.newArrayList(baseRepository.findAll(predicate, sort));
         JdbcClose();
         return result;
@@ -157,7 +151,7 @@ public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extend
         return result;
     }
 
-    private void JdbcClose(){
+    private void JdbcClose() {
         em.close();
     }
 }

@@ -1,5 +1,6 @@
 package pers.hd.simplepro.server.pojo.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -19,6 +20,10 @@ public class UserDTO implements OutputConverter<UserDTO, User> {
 
     private String username;
 
+    private Boolean enabled;
+
+    private String password;
+
     private String nickname;
 
     private String email;
@@ -28,4 +33,7 @@ public class UserDTO implements OutputConverter<UserDTO, User> {
     private Date createTime;
 
     private Date updateTime;
+
+    @JSONField(serialize = false)
+    private Boolean isAdmin = false;
 }

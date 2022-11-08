@@ -38,6 +38,11 @@ public class User extends BaseEntity {
     @Column(name = "description", length = 1023)
     private String description;
 
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    private Boolean isAdmin = false;
+
     @Override
     public void prePersist() {
         super.prePersist();
