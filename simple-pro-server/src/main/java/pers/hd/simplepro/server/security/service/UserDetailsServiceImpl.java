@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         JwtUserDto jwtUserDto = null;
         UserDTO user = userService.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("");
+            throw new UsernameNotFoundException(username + "账号不存在");
         } else {
             if (!user.getEnabled()) {
                 throw new BadRequestException("账号未激活！");

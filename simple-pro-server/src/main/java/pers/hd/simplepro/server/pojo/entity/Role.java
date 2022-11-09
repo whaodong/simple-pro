@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
+/**
+ * @author Administrator
+ */
 @Getter
 @Setter
 @Entity
@@ -18,7 +20,6 @@ public class Role extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String name;
 
     @Column(name = "level")

@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pers.hd.simplepro.server.security.model.SecurityProperties;
+import pers.hd.simplepro.server.security.service.OnlineUserService;
+import pers.hd.simplepro.server.security.service.UserCacheClean;
 
 /**
  * @author wanghaodong

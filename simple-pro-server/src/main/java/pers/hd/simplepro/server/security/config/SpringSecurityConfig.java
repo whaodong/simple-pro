@@ -19,7 +19,11 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import pers.hd.simplepro.server.annotation.AnonymousAccess;
 import pers.hd.simplepro.server.security.model.SecurityProperties;
+import pers.hd.simplepro.server.security.service.OnlineUserService;
+import pers.hd.simplepro.server.security.service.UserCacheClean;
+import pers.hd.simplepro.server.util.RequestMethodEnum;
 
 import java.util.*;
 
@@ -102,7 +106,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/druid/**").permitAll()
                 // 放行OPTIONS请求
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // 自定义匿名访问所有url放行：允许匿名和带Token访问，细腻化到每个 Request 类型
+                // 自定义匿名访问所有url放行：允许匿名和带Token访问，细化到每个 Request 类型
                 // GET
                 .antMatchers(HttpMethod.GET, anonymousUrls.get(RequestMethodEnum.GET.getType()).toArray(new String[0])).permitAll()
                 // POST

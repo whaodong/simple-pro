@@ -2,32 +2,53 @@ package pers.hd.simplepro.core.jpa.base;
 
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.Predicate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * JPA定义实现类
  *
  * @author WangHaoDong
  */
+@Slf4j
 public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extends JpaQueryDsDao<T, ID>> implements JpaQueryDsService<T, ID, R> {
 
     @PersistenceContext
     protected EntityManager em;
 
+    private final String domainName;
+
     @Autowired
     protected R baseRepository;
+
+    protected JpaQueryDsServiceImpl() {
+        @SuppressWarnings("unchecked")
+        Class<T> domainClass = (Class<T>) fetchType();
+        domainName = domainClass.getSimpleName();
+    }
+
+    /**
+     * 获取实际的泛型类型。
+     *
+     * @return 将返回真正的泛型类型
+     */
+    private Type fetchType() {
+        return ((ParameterizedType) this.getClass().getGenericSuperclass())
+                .getActualTypeArguments()[0];
+    }
 
     @Override
     public R getRepository() {
@@ -36,73 +57,62 @@ public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extend
 
     @Override
     public boolean exists(ID id) {
+        log.info("进入 exists 判断");
+        Assert.notNull(id, domainName + " Id 信息不能为空");
         boolean result = baseRepository.existsById(id);
-        JdbcClose();
+        
+        log.info(String.format("退出 exists 判断 %s id:%s 返回:%s", domainName, id, result));
         return result;
     }
 
     @Override
     public T find(ID id) {
+        log.info("进入 find 查询");
+        Assert.notNull(id, domainName + " Id信息不能为空");
         T result = baseRepository.findById(id).orElse(null);
-        JdbcClose();
-        return result;
-    }
-
-    @Override
-    public Optional<T> get(ID id) {
-        T result = baseRepository.findById(id).orElse(null);
-        JdbcClose();
-        return Optional.ofNullable(result);
-    }
-
-    @Override
-    public List<T> findAll(Example<T> example) {
-        List<T> result = baseRepository.findAll(example);
-        JdbcClose();
+        log.info(String.format("退出 find 查询 %s id:%s 返回:%s", domainName, id, result));
         return result;
     }
 
     @Override
     public List<T> findAll() {
+        log.info("进入 findAll 查询");
         List<T> result = baseRepository.findAll();
-        JdbcClose();
+        log.info(String.format("退出 findAll 查询  返回:%s条数据", result.size()));
+        return result;
+    }
+
+    @Override
+    public List<T> findAll(Sort sort) {
+        log.info("进入 findAll 查询");
+        List<T> result = Lists.newArrayList(baseRepository.findAll(sort));
+        log.info(String.format("退出 findAll 查询  返回:%s条数据", result.size()));
         return result;
     }
 
     @Override
     public List<T> findAll(Predicate predicate, Sort sort) {
-        Iterable<T> iterable = baseRepository.findAll(predicate, sort);
-        List<T> result = Lists.newArrayList(baseRepository.findAll(predicate, sort));
-        JdbcClose();
-        return result;
+        return Lists.newArrayList(baseRepository.findAll(predicate, sort));
     }
 
     @Override
     public List<T> findAll(Predicate predicate) {
-        List<T> result = Lists.newArrayList(baseRepository.findAll(predicate));
-        JdbcClose();
-        return result;
+        return Lists.newArrayList(baseRepository.findAll(predicate));
     }
 
     @Override
     public Page<T> findAll(Pageable pageable) {
-        Page<T> result = baseRepository.findAll(pageable);
-        JdbcClose();
-        return result;
+        return baseRepository.findAll(pageable);
     }
 
     @Override
     public Page<T> findAll(Predicate predicate, Pageable pageable) {
-        Page<T> result = baseRepository.findAll(predicate, pageable);
-        JdbcClose();
-        return result;
+        return baseRepository.findAll(predicate, pageable);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public T update(ID id, T entity) {
         T result = update(baseRepository, id, entity);
-        JdbcClose();
         return result;
     }
 
@@ -116,7 +126,7 @@ public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extend
     @Override
     public T save(T entity) {
         T result = save(baseRepository, entity);
-        JdbcClose();
+        
         return result;
     }
 
@@ -136,7 +146,6 @@ public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extend
     @Override
     public void delete(ID id) {
         baseRepository.deleteById(id);
-        JdbcClose();
     }
 
     private <TT, TID extends Serializable> TT update(JpaQueryDsDao<TT, TID> baseRepository, TID id, TT entity) {
@@ -147,11 +156,6 @@ public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extend
 
     private <TT, TID extends Serializable> TT save(JpaQueryDsDao<TT, TID> baseRepository, TT entity) {
         TT result = baseRepository.save(entity);
-        JdbcClose();
         return result;
-    }
-
-    private void JdbcClose() {
-        em.close();
     }
 }

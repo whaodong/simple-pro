@@ -5,9 +5,7 @@ import org.springframework.lang.Nullable;
 import pers.hd.simplepro.core.util.HttpStatus;
 
 /**
- *
  * @author WangHaoDong
-
  */
 public abstract class AbstractSimpleProException extends RuntimeException {
 
@@ -29,7 +27,6 @@ public abstract class AbstractSimpleProException extends RuntimeException {
      *
      * @return {@link HttpStatus}
      */
-    @NonNull
     public abstract HttpStatus getStatus();
 
     @Nullable
