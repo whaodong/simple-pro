@@ -66,7 +66,6 @@ const user = {
         })
       })
     },
-
     updateLoadMenus({ commit }) {
       return new Promise((resolve, reject) => {
         commit('SET_LOAD_MENUS', false)
