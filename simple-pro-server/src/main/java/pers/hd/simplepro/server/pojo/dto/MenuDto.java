@@ -2,15 +2,17 @@ package pers.hd.simplepro.server.pojo.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import pers.hd.simplepro.server.pojo.dto.base.OutputConverter;
+import pers.hd.simplepro.server.pojo.entity.Menu;
 
-import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 
 @Getter
 @Setter
-public class MenuDto implements Serializable {
+public class MenuDto implements OutputConverter<MenuDto, Menu> {
 
     private Long id;
 
@@ -41,6 +43,8 @@ public class MenuDto implements Serializable {
     private String componentName;
 
     private String icon;
+
+    private Date createTime;
 
     public Boolean getHasChildren() {
         return subCount > 0;

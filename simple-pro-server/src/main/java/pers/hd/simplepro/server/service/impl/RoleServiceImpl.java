@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import pers.hd.simplepro.core.jpa.base.JpaQueryDsServiceImpl;
 import pers.hd.simplepro.server.dao.RoleDao;
+import pers.hd.simplepro.server.pojo.dto.RoleSmallDto;
 import pers.hd.simplepro.server.pojo.dto.UserDTO;
 import pers.hd.simplepro.server.pojo.entity.Role;
 import pers.hd.simplepro.server.service.RoleService;
@@ -35,5 +36,10 @@ public class RoleServiceImpl extends JpaQueryDsServiceImpl<Role, Integer, RoleDa
         }
         // todo 构建权限
         return null;
+    }
+
+    @Override
+    public Set<RoleSmallDto> findByUserId(Long id) {
+        return roleDao.findByUserId(id).stream().map(role -> (RoleSmallDto)new RoleSmallDto().convertFrom(role)).collect(Collectors.toSet());
     }
 }

@@ -3,10 +3,12 @@ package pers.hd.simplepro.server.service;
 import org.springframework.security.core.GrantedAuthority;
 import pers.hd.simplepro.core.jpa.base.JpaQueryDsService;
 import pers.hd.simplepro.server.dao.RoleDao;
+import pers.hd.simplepro.server.pojo.dto.RoleSmallDto;
 import pers.hd.simplepro.server.pojo.dto.UserDTO;
 import pers.hd.simplepro.server.pojo.entity.Role;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author WangHaoDong
@@ -18,4 +20,6 @@ public interface RoleService extends JpaQueryDsService<Role, Integer, RoleDao> {
      * @return 权限信息
      */
     List<GrantedAuthority> mapToGrantedAuthorities(UserDTO user);
+
+    Set<RoleSmallDto> findByUserId(Long id);
 }
