@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.pojo.dto.MenuDto;
-import pers.hd.simplepro.server.pojo.entity.Menu;
-import pers.hd.simplepro.server.pojo.query.MenuQueryCriteria;
-import pers.hd.simplepro.server.pojo.support.ResponseResult;
-import pers.hd.simplepro.server.service.MenuService;
+import pers.hd.simplepro.server.model.dto.MenuDTO;
+import pers.hd.simplepro.server.model.entity.Menus;
+import pers.hd.simplepro.server.model.query.MenuQueryCriteria;
+import pers.hd.simplepro.server.model.support.ResponseResult;
+import pers.hd.simplepro.server.service.MenusService;
 import pers.hd.simplepro.server.util.SecurityUtils;
 
 import java.util.*;
@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/menus")
 public class MenuController {
 
-    private final MenuService menuService;
+    private final MenusService menuService;
     private static final String ENTITY_NAME = "menu";
 
     @GetMapping(value = "/build")
     public ResponseEntity<?> buildMenus() throws Exception {
-        List<MenuDto> menuDtoList = menuService.findByUser(SecurityUtils.getCurrentUserId());
-        List<MenuDto> menuDtos = menuService.buildTree(menuDtoList);
+        List<MenuDTO> menuDtoList = menuService.findByUser(SecurityUtils.getCurrentUserId());
+        List<MenuDTO> menuDtos = menuService.buildTree(menuDtoList);
         return ResponseResult.success(menuService.buildMenus(menuDtos));
     }
 
@@ -42,26 +42,26 @@ public class MenuController {
 
     @GetMapping(value = "/child")
     public ResponseEntity<?> child(@RequestParam Long id) {
-        Set<Menu> menuSet = new HashSet<>();
-        List<Menu> menuList = menuService.getMenus(id);
+        Set<Menus> menuSet = new HashSet<>();
+        List<Menus> menuList = menuService.getMenus(id);
         menuSet.add(menuService.find(id));
         menuSet = menuService.getChildMenus(menuList, menuSet);
-        Set<Long> ids = menuSet.stream().map(Menu::getId).collect(Collectors.toSet());
+        Set<Long> ids = menuSet.stream().map(Menus::getId).collect(Collectors.toSet());
         return ResponseResult.success(ids);
     }
 
     @GetMapping
     public ResponseEntity<?> query(MenuQueryCriteria criteria, Pageable pageable) throws Exception {
-        Page<Menu> menuDtoList = menuService.queryAll(criteria, true, pageable);
+        Page<Menus> menuDtoList = menuService.queryAll(criteria, true, pageable);
         return ResponseResult.success(menuDtoList);
     }
 
     @PostMapping("/superior")
     public ResponseEntity<?> getSuperior(@RequestBody List<Long> ids) {
-        Set<MenuDto> menuDtos = new LinkedHashSet<>();
+        Set<MenuDTO> menuDtos = new LinkedHashSet<>();
         if (CollectionUtil.isNotEmpty(ids)) {
             for (Long id : ids) {
-                MenuDto menuDto = menuService.findById(id);
+                MenuDTO menuDto = menuService.findById(id);
                 menuDtos.addAll(menuService.getSuperior(menuDto, new ArrayList<>()));
             }
             return new ResponseEntity<>(menuService.buildTree(new ArrayList<>(menuDtos)), HttpStatus.OK);
@@ -70,7 +70,7 @@ public class MenuController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Validated @RequestBody Menu resources) {
+    public ResponseEntity<?> create(@Validated @RequestBody Menus resources) {
         if (resources.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
         }
@@ -79,16 +79,16 @@ public class MenuController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Menu resources) {
+    public ResponseEntity<?> update(@RequestBody Menus resources) {
         menuService.update(resources);
         return ResponseResult.success(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping
     public ResponseEntity<?> delete(@RequestBody Set<Long> ids) {
-        Set<Menu> menuSet = new HashSet<>();
+        Set<Menus> menuSet = new HashSet<>();
         for (Long id : ids) {
-            List<Menu> menuList = menuService.getMenus(id);
+            List<Menus> menuList = menuService.getMenus(id);
             menuSet.add(menuService.find(id));
             menuSet = menuService.getChildMenus(menuList, menuSet);
         }

@@ -4,7 +4,6 @@ import cn.hutool.core.util.IdUtil;
 import com.wf.captcha.base.Captcha;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pers.hd.simplepro.core.exception.BadRequestException;
 import pers.hd.simplepro.server.annotation.rest.AnonymousDeleteMapping;
 import pers.hd.simplepro.server.annotation.rest.AnonymousGetMapping;
 import pers.hd.simplepro.server.annotation.rest.AnonymousPostMapping;
@@ -62,12 +60,12 @@ public class AuthorizationController {
         String code = (String) redisUtils.get(authUser.getUuid());
         // 清除验证码
         redisUtils.del(authUser.getUuid());
-        if (StringUtils.isBlank(code)) {
+      /*  if (StringUtils.isBlank(code)) {
             throw new BadRequestException("验证码不存在或已过期");
         }
         if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
-        }
+        }*/
         // 根据用户名和密码验证token
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);

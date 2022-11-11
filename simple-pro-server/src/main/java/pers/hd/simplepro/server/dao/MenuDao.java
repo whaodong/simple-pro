@@ -2,8 +2,8 @@ package pers.hd.simplepro.server.dao;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import pers.hd.simplepro.core.jpa.base.JpaQueryDsDao;
-import pers.hd.simplepro.server.pojo.entity.Menu;
+import pers.hd.simplepro.server.jpa.base.JpaQueryDsDao;
+import pers.hd.simplepro.server.model.entity.Menus;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -12,18 +12,18 @@ import java.util.Set;
 /**
  * @author WangHaoDong
  */
-public interface MenuDao extends JpaQueryDsDao<Menu, Long> {
+public interface MenuDao extends JpaQueryDsDao<Menus, Long> {
     boolean existsByTitle(String title);
 
-    Menu findByTitle(String title);
+    Menus findByTitle(String title);
 
-    Menu findByComponentName(String componentName);
+    Menus findByComponentName(String componentName);
 
     boolean existsByComponentName(String componentName);
 
-    List<Menu> findByPid(long pId);
+    List<Menus> findByPid(long pId);
 
-    List<Menu> findByPidIsNull();
+    List<Menus> findByPidIsNull();
 
     /**
      * 根据角色ID与菜单类型查询菜单
@@ -33,7 +33,7 @@ public interface MenuDao extends JpaQueryDsDao<Menu, Long> {
      */
     @Query(value = "SELECT m.* FROM sys_menu m, sys_roles_menus r WHERE " +
             "m.menu_id = r.menu_id AND r.role_id IN ?1 AND type != ?2 order by m.menu_sort asc",nativeQuery = true)
-    LinkedHashSet<Menu> findByRoleIdsAndTypeNot(Set<Long> roleIds, int type);
+    LinkedHashSet<Menus> findByRoleIdsAndTypeNot(Set<Long> roleIds, int type);
 
     /**
      * 更新节点数目

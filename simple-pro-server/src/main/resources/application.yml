@@ -110,3 +110,5 @@ login:
     font-name:
     # 字体大小
     font-size: 25
+ip:
+  local-parsing: true

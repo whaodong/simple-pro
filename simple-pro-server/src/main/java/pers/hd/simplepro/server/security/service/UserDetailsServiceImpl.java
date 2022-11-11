@@ -5,11 +5,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.pojo.dto.UserDTO;
+import pers.hd.simplepro.server.model.dto.UserDTO;
 import pers.hd.simplepro.server.security.model.LoginProperties;
 import pers.hd.simplepro.server.security.service.dto.JwtUserDto;
-import pers.hd.simplepro.server.service.RoleService;
-import pers.hd.simplepro.server.service.UserService;
+import pers.hd.simplepro.server.service.RolesService;
+import pers.hd.simplepro.server.service.UsersService;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserService userService;
-    private final RoleService roleService;
+    private final UsersService userService;
+    private final RolesService roleService;
     private final LoginProperties loginProperties;
 
     public void setEnableCache(boolean enableCache) {

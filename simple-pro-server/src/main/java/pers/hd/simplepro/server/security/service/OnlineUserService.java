@@ -35,7 +35,7 @@ public class OnlineUserService {
      * @param request    /
      */
     public void save(JwtUserDto jwtUserDto, String token, HttpServletRequest request) {
-        String ip = pers.hd.simplepro.server.util.StringUtils.getIp(request);
+        String ip = StringUtils.getIp(request);
         String browser = StringUtils.getBrowser(request);
         String address = StringUtils.getCityInfo(ip);
         OnlineUserDto onlineUserDto = null;
