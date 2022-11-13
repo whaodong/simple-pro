@@ -10,7 +10,7 @@ import pers.hd.simplepro.core.exception.BadRequestException;
 import pers.hd.simplepro.core.util.HttpStatus;
 import pers.hd.simplepro.server.config.RsaProperties;
 import pers.hd.simplepro.server.model.dto.RoleSmallDTO;
-import pers.hd.simplepro.server.model.dto.UserDTO;
+import pers.hd.simplepro.server.model.dto.UsersDTO;
 import pers.hd.simplepro.server.model.entity.Users;
 import pers.hd.simplepro.server.model.params.UserParam;
 import pers.hd.simplepro.server.model.query.UserQueryCriteria;
@@ -18,6 +18,7 @@ import pers.hd.simplepro.server.model.support.ResponseResult;
 import pers.hd.simplepro.server.model.vo.UserPassVo;
 import pers.hd.simplepro.server.service.RolesService;
 import pers.hd.simplepro.server.service.UsersService;
+import pers.hd.simplepro.server.service.assembler.UsersAssembler;
 import pers.hd.simplepro.server.util.RsaUtils;
 import pers.hd.simplepro.server.util.SecurityUtils;
 
@@ -36,19 +37,22 @@ public class UserController {
     private final UsersService userService;
     private final PasswordEncoder passwordEncoder;
     private final RolesService roleService;
+    private final UsersAssembler usersAssembler;
 
     public UserController(UsersService userService,
                           PasswordEncoder passwordEncoder,
-                          RolesService roleService) {
+                          RolesService roleService,
+                          UsersAssembler usersAssembler) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.usersAssembler = usersAssembler;
     }
 
     @GetMapping
     public ResponseEntity<?> query(UserQueryCriteria criteria,
                                    Pageable pageable) {
-        return ResponseResult.success(userService.f(criteria, pageable));
+        return ResponseResult.success(usersAssembler.convertToUsersDTO(userService.f(criteria, pageable)));
     }
 
     @PostMapping
@@ -82,7 +86,7 @@ public class UserController {
             Integer currentLevel = Collections.min(roleService.findByUserId(SecurityUtils.getCurrentUserId()).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(roleService.findByUserId(id).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
-                throw new BadRequestException("角色权限不足，不能删除：" + userService.find(id).getUsername());
+                throw new BadRequestException("角色权限不足，不能删除：" + userService.find(id).getUserName());
             }
         }
         for (Long id : ids) {
@@ -95,14 +99,14 @@ public class UserController {
     public ResponseEntity<?> updatePass(@RequestBody UserPassVo passVo) throws Exception {
         String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, passVo.getOldPass());
         String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, passVo.getNewPass());
-        UserDTO user = userService.findByUsername(SecurityUtils.getCurrentUsername());
+        UsersDTO user = userService.findByUsername(SecurityUtils.getCurrentUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("修改失败，旧密码错误");
         }
         if (passwordEncoder.matches(newPass, user.getPassword())) {
             throw new BadRequestException("新密码不能与旧密码相同");
         }
-        userService.getRepository().updatePass(user.getUsername(), passwordEncoder.encode(newPass), new Date());
+        userService.getRepository().updatePass(user.getUserName(), passwordEncoder.encode(newPass), new Date());
         return ResponseResult.success(HttpStatus.OK);
     }
 /*

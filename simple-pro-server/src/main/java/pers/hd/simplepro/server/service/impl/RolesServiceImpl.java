@@ -5,22 +5,20 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.dao.MenuDao;
-import pers.hd.simplepro.server.dao.RoleDao;
-import pers.hd.simplepro.server.dao.UserDao;
+import pers.hd.simplepro.server.dao.MenusDao;
+import pers.hd.simplepro.server.dao.RolesDao;
+import pers.hd.simplepro.server.dao.RolesMenusDao;
+import pers.hd.simplepro.server.dao.UsersDao;
 import pers.hd.simplepro.server.jpa.base.JpaQueryDsServiceImpl;
-import pers.hd.simplepro.server.model.dto.RoleDTO;
 import pers.hd.simplepro.server.model.dto.RoleSmallDTO;
-import pers.hd.simplepro.server.model.dto.UserDTO;
+import pers.hd.simplepro.server.model.dto.UsersDTO;
+import pers.hd.simplepro.server.model.entity.Menus;
 import pers.hd.simplepro.server.model.entity.Roles;
-import pers.hd.simplepro.server.model.entity.Users;
-import pers.hd.simplepro.server.model.params.RoleParam;
+import pers.hd.simplepro.server.model.entity.RolesMenus;
+import pers.hd.simplepro.server.model.params.RolesParam;
 import pers.hd.simplepro.server.service.RolesService;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,15 +26,15 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class RolesServiceImpl extends JpaQueryDsServiceImpl<Roles, Long, RoleDao>
+public class RolesServiceImpl extends JpaQueryDsServiceImpl<Roles, Long, RolesDao>
         implements RolesService {
-    private final RoleDao roleDao;
-    private final UserDao userDao;
-
-    private final MenuDao menuDao;
+    private final RolesDao roleDao;
+    private final UsersDao userDao;
+    private final RolesMenusDao rolesMenusDao;
+    private final MenusDao menuDao;
 
     @Override
-    public List<GrantedAuthority> mapToGrantedAuthorities(UserDTO user) {
+    public List<GrantedAuthority> mapToGrantedAuthorities(UsersDTO user) {
         Set<String> permissions = new HashSet<>();
         // 如果是管理员直接返回
         if (user.getIsAdmin()) {
@@ -54,24 +52,27 @@ public class RolesServiceImpl extends JpaQueryDsServiceImpl<Roles, Long, RoleDao
     }
 
     @Override
-    public Integer findByRoles(Set<Roles> roles) {
+    public Integer findByRoles(Set<RolesParam> roles) {
         if (roles.size() == 0) {
             return Integer.MAX_VALUE;
         }
-        Set<RoleDTO> roleDtos = new HashSet<>();
-        for (Roles role : roles) {
-            roleDtos.add(new RoleDTO().convertFrom(find(role.getId())));
+        List<Roles> roleDtos = new ArrayList<>();
+        for (RolesParam role : roles) {
+            roleDtos.add(find(role.getId()));
         }
-        return Collections.min(roleDtos.stream().map(RoleDTO::getLevel).collect(Collectors.toList()));
+        return Collections.min(roleDtos.stream().map(Roles::getLevel).collect(Collectors.toList()));
     }
 
     @Override
-    public void updateMenu(RoleParam roleParam, Roles role) {
-        List<Users> users = userDao.findByRoleId(role.getId());
+    public void updateMenu(RolesParam roleParam) {
         // 更新菜单
-        role.setMenus(roleParam.getMenus());
-        delCaches(resources.getId(), users);
-        roleRepository.save(role);
+        RolesMenus rolesMenus;
+        for (Menus menu : roleParam.getMenus()) {
+            rolesMenus = new RolesMenus();
+            rolesMenus.setRoleId(roleParam.getId());
+            rolesMenus.setMenuId(menu.getId());
+            rolesMenusDao.save(rolesMenus);
+        }
     }
 
     @Override

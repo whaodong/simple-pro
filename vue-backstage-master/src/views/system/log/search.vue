@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import { header } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
+import { header } from '@/components/Crud/crud'
+import rrOperation from '@/components/Crud/RR.operation'
 import DateRangePicker from '@/components/DateRangePicker'
 export default {
   components: { rrOperation, DateRangePicker },

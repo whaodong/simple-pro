@@ -77,10 +77,10 @@
 
 import { generator, sync } from '@/api/generator'
 import { downloadFile } from '@/utils/index'
-import CRUD, { presenter, header } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
+import CRUD, { presenter, header } from '@/components/Crud/crud'
+import rrOperation from '@/components/Crud/RR.operation'
+import crudOperation from '@/components/Crud/CRUD.operation'
+import pagination from '@/components/Crud/Pagination'
 
 export default {
   name: 'GeneratorIndex',

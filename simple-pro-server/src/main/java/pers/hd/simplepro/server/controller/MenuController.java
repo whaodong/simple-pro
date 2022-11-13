@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import pers.hd.simplepro.core.exception.BadRequestException;
 import pers.hd.simplepro.server.model.dto.MenuDTO;
 import pers.hd.simplepro.server.model.entity.Menus;
+import pers.hd.simplepro.server.model.params.MenusParam;
 import pers.hd.simplepro.server.model.query.MenuQueryCriteria;
 import pers.hd.simplepro.server.model.support.ResponseResult;
 import pers.hd.simplepro.server.service.MenusService;
@@ -51,8 +52,10 @@ public class MenuController {
     }
 
     @GetMapping
-    public ResponseEntity<?> query(MenuQueryCriteria criteria, Pageable pageable) throws Exception {
+    public ResponseEntity<?> query(MenuQueryCriteria criteria,
+                                   Pageable pageable) throws Exception {
         Page<Menus> menuDtoList = menuService.queryAll(criteria, true, pageable);
+        menuDtoList.map(menus -> new MenuDTO().convertFrom(menus));
         return ResponseResult.success(menuDtoList);
     }
 
@@ -70,17 +73,17 @@ public class MenuController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Validated @RequestBody Menus resources) {
+    public ResponseEntity<?> create(@Validated @RequestBody MenusParam resources) {
         if (resources.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
         }
-        menuService.create(resources);
+        menuService.createMenus(resources);
         return ResponseResult.success(HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Menus resources) {
-        menuService.update(resources);
+    public ResponseEntity<?> update(@RequestBody MenusParam resources) {
+        menuService.updateMenus(resources);
         return ResponseResult.success(HttpStatus.NO_CONTENT);
     }
 

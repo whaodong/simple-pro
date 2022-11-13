@@ -4,7 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import pers.hd.simplepro.server.model.entity.Menus;
+import pers.hd.simplepro.server.model.entity.Roles;
 import pers.hd.simplepro.server.model.entity.Users;
+import pers.hd.simplepro.server.model.support.base.InputConverter;
 
 import java.util.Set;
 
@@ -14,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class RoleParam {
+public class RolesParam implements InputConverter<Roles> {
 
     private Long id;
 

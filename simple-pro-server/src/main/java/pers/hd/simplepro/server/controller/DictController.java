@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.model.entity.Dict;
+import pers.hd.simplepro.server.model.entity.Dicts;
 import pers.hd.simplepro.server.model.query.DictQueryCriteria;
 import pers.hd.simplepro.server.model.support.ResponseResult;
 import pers.hd.simplepro.server.service.DictService;
@@ -30,11 +30,11 @@ public class DictController {
 
     @GetMapping
     public ResponseEntity<?> query(DictQueryCriteria dict, Pageable pageable) {
-        return ResponseResult.success(dictService.findAll((root, query, cb) -> QueryHelp.getPredicate(root, dict, cb), pageable));
+        return ResponseResult.success(dictService.findAll((root, query, cb) -> QueryHelp.getPredicate(root, query, cb, dict), pageable));
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Validated @RequestBody Dict dict) {
+    public ResponseEntity<?> create(@Validated @RequestBody Dicts dict) {
         if (dict.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
         }
@@ -43,7 +43,7 @@ public class DictController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Validated @RequestBody Dict resources) {
+    public ResponseEntity<?> update(@Validated @RequestBody Dicts resources) {
         dictService.update(resources.getId(), resources);
         return ResponseResult.success(HttpStatus.NO_CONTENT);
     }

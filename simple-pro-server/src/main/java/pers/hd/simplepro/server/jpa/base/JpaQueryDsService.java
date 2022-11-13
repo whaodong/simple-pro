@@ -5,9 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -48,4 +51,14 @@ public interface JpaQueryDsService<T, ID extends Serializable, R extends JpaQuer
     T saveOrUpdate(ID id, T t);
 
     void delete(ID id);
+
+    @Transactional
+    List<T> createInBatch(@NonNull Collection<T> domains);
+
+    @NonNull
+    @Transactional
+    List<T> updateInBatch(@NonNull Collection<T> domains);
+
+    @Transactional
+    void deleteByIdInBatch(@NonNull Collection<ID> ids);
 }

@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name="sys_dict")
-public class Dict extends BaseEntity{
+public class Dicts extends BaseEntity{
 
     @Id
     @Column(name = "dict_id")

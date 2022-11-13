@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import pers.hd.simplepro.core.exception.BadRequestException;
 import pers.hd.simplepro.server.model.dto.RoleSmallDTO;
 import pers.hd.simplepro.server.model.entity.Roles;
-import pers.hd.simplepro.server.model.params.RoleParam;
+import pers.hd.simplepro.server.model.params.RolesParam;
 import pers.hd.simplepro.server.model.query.RoleQueryCriteria;
 import pers.hd.simplepro.server.model.support.ResponseResult;
 import pers.hd.simplepro.server.service.RolesService;
@@ -68,10 +68,10 @@ public class RoleController {
     }
 
     @PutMapping(value = "/menu")
-    public ResponseEntity<?> updateMenu(@RequestBody RoleParam roleParam) {
+    public ResponseEntity<?> updateMenu(@RequestBody RolesParam roleParam) {
         Roles role = roleService.find(roleParam.getId());
         getLevels(role.getLevel());
-        roleService.updateMenu(roleParam, role);
+        roleService.updateMenu(roleParam);
         return ResponseResult.success(HttpStatus.NO_CONTENT);
     }
 
@@ -83,7 +83,7 @@ public class RoleController {
         }
         // 验证是否被用户关联
         roleService.verification(ids);
-        roleService.delete(ids);
+        roleService.deleteByIdInBatch(ids);
         return ResponseResult.success(HttpStatus.OK);
     }
 

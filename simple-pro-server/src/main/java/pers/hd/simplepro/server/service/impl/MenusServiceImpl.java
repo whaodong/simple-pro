@@ -12,10 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.hd.simplepro.core.exception.BadRequestException;
 import pers.hd.simplepro.core.exception.EntityExistException;
 import pers.hd.simplepro.server.jpa.base.JpaQueryDsServiceImpl;
-import pers.hd.simplepro.server.dao.MenuDao;
+import pers.hd.simplepro.server.dao.MenusDao;
 import pers.hd.simplepro.server.model.dto.MenuDTO;
 import pers.hd.simplepro.server.model.dto.RoleSmallDTO;
 import pers.hd.simplepro.server.model.entity.Menus;
+import pers.hd.simplepro.server.model.params.MenusParam;
 import pers.hd.simplepro.server.model.query.MenuQueryCriteria;
 import pers.hd.simplepro.server.model.vo.MenuMetaVO;
 import pers.hd.simplepro.server.model.vo.MenuVO;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class MenusServiceImpl extends JpaQueryDsServiceImpl<Menus, Long, MenuDao>
+public class MenusServiceImpl extends JpaQueryDsServiceImpl<Menus, Long, MenusDao>
         implements MenusService {
 
     private final RolesService roleService;
@@ -56,7 +57,7 @@ public class MenusServiceImpl extends JpaQueryDsServiceImpl<Menus, Long, MenuDao
                 }
             }
         }
-        return this.baseRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
+        return this.f(criteria, pageable);
     }
 
     @Override
@@ -66,34 +67,34 @@ public class MenusServiceImpl extends JpaQueryDsServiceImpl<Menus, Long, MenuDao
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void create(Menus resources) {
-        if (this.baseRepository.existsByTitle(resources.getTitle())) {
-            throw new EntityExistException(Menus.class, "title", resources.getTitle());
+    public void createMenus(MenusParam menusParam) {
+        if (this.baseRepository.existsByTitle(menusParam.getTitle())) {
+            throw new EntityExistException(Menus.class, "title", menusParam.getTitle());
         }
-        if (StringUtils.isNotBlank(resources.getComponentName())) {
-            if (this.baseRepository.existsByComponentName(resources.getComponentName())) {
-                throw new EntityExistException(Menus.class, "componentName", resources.getComponentName());
+        if (StringUtils.isNotBlank(menusParam.getComponentName())) {
+            if (this.baseRepository.existsByComponentName(menusParam.getComponentName())) {
+                throw new EntityExistException(Menus.class, "componentName", menusParam.getComponentName());
             }
         }
-        if (resources.getPid().equals(0L)) {
-            resources.setPid(null);
+        if (menusParam.getPid().equals(0L)) {
+            menusParam.setPid(null);
         }
-        if (resources.getIFrame()) {
+        if (menusParam.getIFrame()) {
             String http = "http://", https = "https://";
-            if (!(resources.getPath().toLowerCase().startsWith(http) || resources.getPath().toLowerCase().startsWith(https))) {
+            if (!(menusParam.getPath().toLowerCase().startsWith(http) || menusParam.getPath().toLowerCase().startsWith(https))) {
                 throw new BadRequestException("外链必须以http://或者https://开头");
             }
         }
-        this.save(resources);
+        this.save(menusParam.convertTo());
         // 计算子节点数目
-        resources.setSubCount(0);
+        menusParam.setSubCount(0);
         // 更新父节点菜单数目
-        updateSubCnt(resources.getPid());
+        updateSubCnt(menusParam.getPid());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(Menus resources) {
+    public void updateMenus(MenusParam resources) {
         if (resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
@@ -124,19 +125,7 @@ public class MenusServiceImpl extends JpaQueryDsServiceImpl<Menus, Long, MenuDao
                 throw new EntityExistException(Menus.class, "componentName", resources.getComponentName());
             }
         }
-        menu.setTitle(resources.getTitle());
-        menu.setComponent(resources.getComponent());
-        menu.setPath(resources.getPath());
-        menu.setIcon(resources.getIcon());
-        menu.setIFrame(resources.getIFrame());
-        menu.setPid(resources.getPid());
-        menu.setMenuSort(resources.getMenuSort());
-        menu.setCache(resources.getCache());
-        menu.setHidden(resources.getHidden());
-        menu.setComponentName(resources.getComponentName());
-        menu.setPermission(resources.getPermission());
-        menu.setType(resources.getType());
-        this.save(menu);
+        this.update(resources.convertTo());
         // 计算父级菜单节点数目
         updateSubCnt(oldPid);
         updateSubCnt(newPid);

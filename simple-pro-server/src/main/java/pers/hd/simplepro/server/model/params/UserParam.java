@@ -16,9 +16,9 @@ public class UserParam implements InputConverter<Users> {
 
     private Long id;
 
-    private String username;
+    private String userName;
 
-    private String nickname;
+    private String nickName;
 
     private String password;
 
@@ -28,6 +28,6 @@ public class UserParam implements InputConverter<Users> {
 
     private Boolean enabled;
 
-    private Set<RoleParam> roles;
+    private Set<RolesParam> roles;
 
 }

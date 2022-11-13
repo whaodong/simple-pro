@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * @author WangHaoDong
  */
-public interface MenuDao extends JpaQueryDsDao<Menus, Long> {
+public interface MenusDao extends JpaQueryDsDao<Menus, Long> {
     boolean existsByTitle(String title);
 
     Menus findByTitle(String title);

@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import pers.hd.simplepro.server.util.QueryHelp;
 
 import javax.persistence.EntityManager;
@@ -19,6 +20,8 @@ import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -120,7 +123,7 @@ public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extend
 
     @Override
     public <Q> Page<T> f(Q criteria, Pageable pageable) {
-        return baseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, criteria, cb), pageable);
+        return baseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root,query, cb,criteria), pageable);
     }
 
 
@@ -171,5 +174,26 @@ public abstract class JpaQueryDsServiceImpl<T, ID extends Serializable, R extend
     private <TT, TID extends Serializable> TT save(JpaQueryDsDao<TT, TID> baseRepository, TT entity) {
         TT result = baseRepository.save(entity);
         return result;
+    }
+
+    @Override
+    public List<T> createInBatch(Collection<T> domains) {
+        return CollectionUtils.isEmpty(domains) ? Collections.emptyList() :
+                baseRepository.saveAll(domains);
+    }
+
+    @Override
+    public List<T> updateInBatch(Collection<T> domains) {
+        return CollectionUtils.isEmpty(domains) ? Collections.emptyList() :
+                baseRepository.saveAll(domains);
+    }
+
+    @Override
+    public void deleteByIdInBatch(Collection<ID> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            log.debug(domainName + " id collection is empty");
+            return;
+        }
+        baseRepository.deleteAllById(ids);
     }
 }

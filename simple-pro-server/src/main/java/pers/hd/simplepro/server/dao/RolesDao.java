@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * @author WangHaoDong
  */
-public interface RoleDao extends JpaQueryDsDao<Roles, Long> {
+public interface RolesDao extends JpaQueryDsDao<Roles, Long> {
     @Query(value = "SELECT r.* FROM sys_role r, sys_users_roles u WHERE " +
             "r.role_id = u.role_id AND u.user_id = ?1",nativeQuery = true)
     Set<Roles> findByUserId(Long id);

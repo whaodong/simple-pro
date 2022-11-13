@@ -46,8 +46,8 @@
         width="570px"
       >
         <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="66px">
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="form.username" />
+          <el-form-item label="用户名" prop="userName">
+            <el-input v-model="form.userName" />
           </el-form-item>
           <el-form-item label="电话" prop="phone">
             <el-input v-model.number="form.phone" />
@@ -109,7 +109,7 @@
         @selection-change="crud.selectionChangeHandler"
       >
         <el-table-column :selectable="checkboxT" type="selection" width="55" />
-        <el-table-column :show-overflow-tooltip="true" prop="username" label="用户名" />
+        <el-table-column :show-overflow-tooltip="true" prop="userName" label="用户名" />
         <el-table-column :show-overflow-tooltip="true" prop="nickName" label="昵称" />
         <el-table-column prop="gender" label="性别" />
         <el-table-column :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
@@ -152,11 +152,11 @@
 import crudUser from '@/api/user'
 import { isvalidPhone } from '@/utils/validate'
 import { getAll, getLevel } from '@/api/role'
-import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
+import CRUD, { presenter, header, form, crud } from '@/components/Crud/crud'
+import rrOperation from '@/components/Crud/RR.operation'
+import crudOperation from '@/components/Crud/CRUD.operation'
+import udOperation from '@/components/Crud/UD.operation'
+import pagination from '@/components/Crud/Pagination'
 import DateRangePicker from '@/components/DateRangePicker'
 import { mapGetters } from 'vuex'
 
@@ -164,7 +164,7 @@ let userRoles = []
 let userJobs = []
 const defaultForm = {
   id: null,
-  username: null,
+  userName: null,
   nickName: null,
   gender: '男',
   email: null,
@@ -207,7 +207,7 @@ export default {
         { key: 'false', display_name: '锁定' }
       ],
       rules: {
-        username: [
+        userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
@@ -300,7 +300,7 @@ export default {
     },
     // 改变状态
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
+      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.userName + ', 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -317,7 +317,7 @@ export default {
     // 获取弹窗内角色数据
     getRoles() {
       getAll().then(res => {
-        this.roles = res
+        this.roles = res.content
       }).catch(() => {
       })
     },

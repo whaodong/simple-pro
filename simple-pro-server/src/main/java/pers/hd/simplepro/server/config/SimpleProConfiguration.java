@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "pers.hd.simplepro.server.dao",
 })
 @EntityScan(basePackages = {
-        "pers.hd.simplepro.server.pojo.entity",
+        "pers.hd.simplepro.server.model.entity",
 })
 public class SimpleProConfiguration {
 }

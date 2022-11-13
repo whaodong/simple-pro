@@ -102,11 +102,11 @@
 <script>
 import dictDetail from './dictDetail'
 import crudDict from '@/api/dict'
-import CRUD, { presenter, header, form } from '@crud/crud'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
-import rrOperation from '@crud/RR.operation'
-import udOperation from '@crud/UD.operation'
+import CRUD, { presenter, header, form } from '@/components/Crud/crud'
+import crudOperation from '@/components/Crud/CRUD.operation'
+import pagination from '@/components/Crud/Pagination'
+import rrOperation from '@/components/Crud/RR.operation'
+import udOperation from '@/components/Crud/UD.operation'
 
 const defaultForm = { id: null, name: null, description: null, dictDetails: [] }
 

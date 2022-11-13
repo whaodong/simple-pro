@@ -52,9 +52,9 @@
 <script>
 import Search from './search'
 import { delAllInfo } from '@/api/log'
-import CRUD, { presenter } from '@crud/crud'
-import crudOperation from '@crud/CRUD.operation'
-import pagination from '@crud/Pagination'
+import CRUD, { presenter } from '@/components/Crud/crud'
+import crudOperation from '@/components/Crud/CRUD.operation'
+import pagination from '@/components/Crud/Pagination'
 
 export default {
   name: 'Log',

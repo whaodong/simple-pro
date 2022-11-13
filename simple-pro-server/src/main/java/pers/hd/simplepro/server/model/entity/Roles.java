@@ -1,5 +1,6 @@
 package pers.hd.simplepro.server.model.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import pers.hd.simplepro.server.enums.DataScopeEnum;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "sys_role")
 public class Roles extends BaseEntity {
 

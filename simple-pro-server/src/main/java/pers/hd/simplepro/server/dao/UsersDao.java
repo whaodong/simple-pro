@@ -12,8 +12,8 @@ import java.util.Set;
 /**
  * @author WangHaoDong
  */
-public interface UserDao extends JpaQueryDsDao<Users, Long> {
-    Users findByUsername(String userName);
+public interface UsersDao extends JpaQueryDsDao<Users, Long> {
+    Users findByUserName(String userName);
 
     /**
      * 修改密码

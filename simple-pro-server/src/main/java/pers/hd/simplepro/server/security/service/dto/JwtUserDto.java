@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pers.hd.simplepro.server.model.dto.UserDTO;
+import pers.hd.simplepro.server.model.dto.UsersDTO;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtUserDto implements UserDetails {
 
-    private final UserDTO user;
+    private final UsersDTO user;
 
     @JSONField(serialize = false)
     private final List<GrantedAuthority> authorities;
@@ -37,7 +37,7 @@ public class JwtUserDto implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public String getUsername() {
-        return user.getUsername();
+        return user.getUserName();
     }
 
     @JSONField(serialize = false)

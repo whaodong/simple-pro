@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.util.Date;
 
 /**
  * User entity
@@ -21,23 +24,29 @@ public class Users extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username", length = 50, nullable = false)
-    private String username;
+    @NotBlank
+    @Column(name = "username",unique = true)
+    private String userName;
 
-    @Column(name = "nickname", nullable = false)
-    private String nickname;
+    @Column(name = "nick_name")
+    private String nickName;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "email", length = 127)
+    @Email
+    @NotBlank
     private String email;
 
-    @Column(name = "description", length = 1023)
-    private String description;
+    @NotBlank
+    private String phone;
 
-    @Column(name = "enabled")
+    private String gender;
+
+    private String password;
+
     private Boolean enabled;
 
-    private Boolean ifAdmin = false;
+    private Boolean isAdmin = false;
+
+    @Column(name = "pwd_reset_time")
+    private Date pwdResetTime;
+
 }

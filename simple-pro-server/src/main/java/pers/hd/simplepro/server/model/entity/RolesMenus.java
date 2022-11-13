@@ -1,13 +1,17 @@
 package pers.hd.simplepro.server.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 
 /**
  * @author WangHaoDong
  */
+@Getter
+@Setter
+@Entity
+@Table(name = "sys_roles_menus")
 public class RolesMenus {
 
     @Id
@@ -15,8 +19,8 @@ public class RolesMenus {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "menu_id")
+    private Long menuId;
 
     @Column(name = "role_id")
     private Long roleId;

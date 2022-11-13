@@ -90,10 +90,10 @@
 
 <script>
 import crudDictDetail from '@/api/dictDetail'
-import CRUD, { presenter, header, form } from '@crud/crud'
-import pagination from '@crud/Pagination'
-import rrOperation from '@crud/RR.operation'
-import udOperation from '@crud/UD.operation'
+import CRUD, { presenter, header, form } from '@/components/Crud/crud'
+import pagination from '@/components/Crud/Pagination'
+import rrOperation from '@/components/Crud/RR.operation'
+import udOperation from '@/components/Crud/UD.operation'
 
 const defaultForm = { id: null, label: null, value: null, dictSort: 999 }
 

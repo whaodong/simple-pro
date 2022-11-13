@@ -3,9 +3,10 @@ package pers.hd.simplepro.server.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pers.hd.simplepro.server.jpa.base.JpaQueryDsService;
-import pers.hd.simplepro.server.dao.MenuDao;
+import pers.hd.simplepro.server.dao.MenusDao;
 import pers.hd.simplepro.server.model.dto.MenuDTO;
 import pers.hd.simplepro.server.model.entity.Menus;
+import pers.hd.simplepro.server.model.params.MenusParam;
 import pers.hd.simplepro.server.model.query.MenuQueryCriteria;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Set;
 /**
  * @author WangHaoDong
  */
-public interface MenusService extends JpaQueryDsService<Menus, Long, MenuDao> {
+public interface MenusService extends JpaQueryDsService<Menus, Long, MenusDao> {
     /**
      * 查询全部数据
      *
@@ -38,14 +39,14 @@ public interface MenusService extends JpaQueryDsService<Menus, Long, MenuDao> {
      *
      * @param resources /
      */
-    void create(Menus resources);
+    void createMenus(MenusParam resources);
 
     /**
      * 编辑
      *
      * @param resources /
      */
-    void update(Menus resources);
+    void updateMenus(MenusParam resources);
 
     /**
      * 获取所有子节点，包含自身ID

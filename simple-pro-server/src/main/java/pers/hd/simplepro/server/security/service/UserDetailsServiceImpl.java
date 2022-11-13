@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.model.dto.UserDTO;
+import pers.hd.simplepro.server.model.dto.UsersDTO;
 import pers.hd.simplepro.server.security.model.LoginProperties;
 import pers.hd.simplepro.server.security.service.dto.JwtUserDto;
 import pers.hd.simplepro.server.service.RolesService;
@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public JwtUserDto loadUserByUsername(String username) {
         JwtUserDto jwtUserDto = null;
-        UserDTO user = userService.findByUsername(username);
+        UsersDTO user = userService.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(username + "账号不存在");
         } else {

@@ -125,11 +125,11 @@
 <script>
 import crudRoles from '@/api/role'
 import { getMenusTree, getChild } from '@/api/menu'
-import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
-import pagination from '@crud/Pagination'
+import CRUD, { presenter, header, form, crud } from '@/components/Crud/crud'
+import rrOperation from '@/components/Crud/RR.operation'
+import crudOperation from '@/components/Crud/CRUD.operation'
+import udOperation from '@/components/Crud/UD.operation'
+import pagination from '@/components/Crud/Pagination'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import DateRangePicker from '@/components/DateRangePicker'
 
