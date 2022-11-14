@@ -8,13 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.model.dto.MenuDTO;
-import pers.hd.simplepro.server.model.entity.Menus;
-import pers.hd.simplepro.server.model.params.MenusParam;
-import pers.hd.simplepro.server.model.query.MenuQueryCriteria;
-import pers.hd.simplepro.server.model.support.ResponseResult;
-import pers.hd.simplepro.server.service.MenusService;
+import pers.hd.simplepro.server.exception.BadRequestException;
+import pers.hd.simplepro.server.domain.model.dto.MenuDTO;
+import pers.hd.simplepro.server.domain.model.entity.Menus;
+import pers.hd.simplepro.server.domain.model.params.MenusParam;
+import pers.hd.simplepro.server.domain.model.query.MenuQueryCriteria;
+import pers.hd.simplepro.server.domain.model.support.ResponseResult;
+import pers.hd.simplepro.server.domain.service.MenusService;
 import pers.hd.simplepro.server.util.SecurityUtils;
 
 import java.util.*;
@@ -37,17 +37,17 @@ public class MenuController {
     }
 
     @GetMapping(value = "/lazy")
-    public ResponseEntity<?> query(@RequestParam Long pid) {
+    public ResponseEntity<?> query(@RequestParam String pid) {
         return ResponseResult.success(menuService.getMenus(pid));
     }
 
     @GetMapping(value = "/child")
-    public ResponseEntity<?> child(@RequestParam Long id) {
+    public ResponseEntity<?> child(@RequestParam String id) {
         Set<Menus> menuSet = new HashSet<>();
         List<Menus> menuList = menuService.getMenus(id);
         menuSet.add(menuService.find(id));
         menuSet = menuService.getChildMenus(menuList, menuSet);
-        Set<Long> ids = menuSet.stream().map(Menus::getId).collect(Collectors.toSet());
+        Set<String> ids = menuSet.stream().map(Menus::getId).collect(Collectors.toSet());
         return ResponseResult.success(ids);
     }
 
@@ -60,10 +60,10 @@ public class MenuController {
     }
 
     @PostMapping("/superior")
-    public ResponseEntity<?> getSuperior(@RequestBody List<Long> ids) {
+    public ResponseEntity<?> getSuperior(@RequestBody List<String> ids) {
         Set<MenuDTO> menuDtos = new LinkedHashSet<>();
         if (CollectionUtil.isNotEmpty(ids)) {
-            for (Long id : ids) {
+            for (String id : ids) {
                 MenuDTO menuDto = menuService.findById(id);
                 menuDtos.addAll(menuService.getSuperior(menuDto, new ArrayList<>()));
             }
@@ -88,9 +88,9 @@ public class MenuController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> delete(@RequestBody Set<Long> ids) {
+    public ResponseEntity<?> delete(@RequestBody Set<String> ids) {
         Set<Menus> menuSet = new HashSet<>();
-        for (Long id : ids) {
+        for (String id : ids) {
             List<Menus> menuList = menuService.getMenus(id);
             menuSet.add(menuService.find(id));
             menuSet = menuService.getChildMenus(menuList, menuSet);

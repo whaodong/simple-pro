@@ -17,7 +17,7 @@ public class LoginCode {
     /**
      * 验证码有效期 分钟
      */
-    private Long expiration = 2L;
+    private long expiration = 2L;
     /**
      * 验证码内容长度
      */

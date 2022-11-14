@@ -1,5 +1,7 @@
 package pers.hd.simplepro.server.annotation;
 
+import pers.hd.simplepro.server.domain.model.entity.BaseEntity;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,15 +19,9 @@ public @interface SimpleQuery {
     // 查询方式
     Type type() default Type.EQUAL;
 
-    /**
-     * 连接查询的属性名，如User类中的dept
-     */
-    String joinName() default "";
+    Class<? extends BaseEntity> formTable() default BaseEntity.class;
 
-    /**
-     * 默认左连接
-     */
-    Join join() default Join.LEFT;
+    String formPropName() default "";
 
     /**
      * 多字段模糊搜索，仅支持String类型字段，多个用逗号隔开, 如@Query(blurry = "email,username")
@@ -57,13 +53,6 @@ public @interface SimpleQuery {
         ,NOT_NULL
         // 为空
         ,IS_NULL
-    }
-
-    /**
-     * 适用于简单连接查询，复杂的请自定义该注解，或者使用sql查询
-     */
-    enum Join {
-        LEFT, RIGHT, INNER
     }
 
 }

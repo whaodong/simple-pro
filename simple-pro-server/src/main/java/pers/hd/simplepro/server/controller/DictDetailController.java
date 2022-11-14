@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.model.entity.DictDetail;
-import pers.hd.simplepro.server.model.query.DictDetailQueryCriteria;
-import pers.hd.simplepro.server.model.support.ResponseResult;
-import pers.hd.simplepro.server.service.DictDetailService;
+import pers.hd.simplepro.server.exception.BadRequestException;
+import pers.hd.simplepro.server.domain.model.entity.DictDetail;
+import pers.hd.simplepro.server.domain.model.query.DictDetailQueryCriteria;
+import pers.hd.simplepro.server.domain.model.support.ResponseResult;
+import pers.hd.simplepro.server.domain.service.DictDetailService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +58,7 @@ public class DictDetailController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    public ResponseEntity<Object> delete(@PathVariable String id) {
         dictDetailService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pers.hd.simplepro.server.model.dto.UsersDTO;
+import pers.hd.simplepro.server.domain.model.dto.UsersDTO;
 
 import java.util.List;
 import java.util.Set;

@@ -4,7 +4,7 @@ import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-import pers.hd.simplepro.core.exception.BadConfigurationException;
+import pers.hd.simplepro.server.exception.BadConfigurationException;
 
 import java.awt.*;
 import java.util.Objects;

@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.model.entity.Dicts;
-import pers.hd.simplepro.server.model.query.DictQueryCriteria;
-import pers.hd.simplepro.server.model.support.ResponseResult;
-import pers.hd.simplepro.server.service.DictService;
+import pers.hd.simplepro.server.exception.BadRequestException;
+import pers.hd.simplepro.server.domain.model.entity.Dicts;
+import pers.hd.simplepro.server.domain.model.query.DictQueryCriteria;
+import pers.hd.simplepro.server.domain.model.support.ResponseResult;
+import pers.hd.simplepro.server.domain.service.DictService;
 import pers.hd.simplepro.server.util.QueryHelp;
 
 import java.util.Set;
@@ -49,7 +49,7 @@ public class DictController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> delete(@RequestBody Set<Long> ids) {
+    public ResponseEntity<?> delete(@RequestBody Set<String> ids) {
         dictService.delete(ids);
         return ResponseResult.success(HttpStatus.OK);
     }

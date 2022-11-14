@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.model.dto.UsersDTO;
+import pers.hd.simplepro.server.exception.BadRequestException;
+import pers.hd.simplepro.server.domain.model.dto.UsersDTO;
 import pers.hd.simplepro.server.security.model.LoginProperties;
 import pers.hd.simplepro.server.security.service.dto.JwtUserDto;
-import pers.hd.simplepro.server.service.RolesService;
-import pers.hd.simplepro.server.service.UsersService;
+import pers.hd.simplepro.server.domain.service.RolesService;
+import pers.hd.simplepro.server.domain.service.UsersService;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

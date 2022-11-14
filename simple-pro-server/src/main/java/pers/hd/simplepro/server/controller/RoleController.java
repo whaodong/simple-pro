@@ -7,13 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.model.dto.RoleSmallDTO;
-import pers.hd.simplepro.server.model.entity.Roles;
-import pers.hd.simplepro.server.model.params.RolesParam;
-import pers.hd.simplepro.server.model.query.RoleQueryCriteria;
-import pers.hd.simplepro.server.model.support.ResponseResult;
-import pers.hd.simplepro.server.service.RolesService;
+import pers.hd.simplepro.server.exception.BadRequestException;
+import pers.hd.simplepro.server.domain.model.dto.RoleSmallDTO;
+import pers.hd.simplepro.server.domain.model.entity.Roles;
+import pers.hd.simplepro.server.domain.model.params.RolesParam;
+import pers.hd.simplepro.server.domain.model.query.RoleQueryCriteria;
+import pers.hd.simplepro.server.domain.model.support.ResponseResult;
+import pers.hd.simplepro.server.domain.service.RolesService;
 import pers.hd.simplepro.server.util.SecurityUtils;
 
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class RoleController {
     private static final String ENTITY_NAME = "role";
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> query(@PathVariable Long id) {
+    public ResponseEntity<?> query(@PathVariable String id) {
         return ResponseResult.success(roleService.find(id));
     }
 
@@ -76,8 +76,8 @@ public class RoleController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> delete(@RequestBody Set<Long> ids) {
-        for (Long id : ids) {
+    public ResponseEntity<?> delete(@RequestBody Set<String> ids) {
+        for (String id : ids) {
             Roles role = roleService.find(id);
             getLevels(role.getLevel());
         }

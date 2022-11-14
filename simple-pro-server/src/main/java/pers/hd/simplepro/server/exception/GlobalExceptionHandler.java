@@ -5,8 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.server.model.support.ResponseResult;
+import pers.hd.simplepro.server.domain.model.support.ResponseResult;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -6,19 +6,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.core.util.HttpStatus;
+import pers.hd.simplepro.server.exception.BadRequestException;
+import pers.hd.simplepro.server.util.HttpStatus;
 import pers.hd.simplepro.server.config.RsaProperties;
-import pers.hd.simplepro.server.model.dto.RoleSmallDTO;
-import pers.hd.simplepro.server.model.dto.UsersDTO;
-import pers.hd.simplepro.server.model.entity.Users;
-import pers.hd.simplepro.server.model.params.UserParam;
-import pers.hd.simplepro.server.model.query.UserQueryCriteria;
-import pers.hd.simplepro.server.model.support.ResponseResult;
-import pers.hd.simplepro.server.model.vo.UserPassVo;
-import pers.hd.simplepro.server.service.RolesService;
-import pers.hd.simplepro.server.service.UsersService;
-import pers.hd.simplepro.server.service.assembler.UsersAssembler;
+import pers.hd.simplepro.server.domain.model.dto.RoleSmallDTO;
+import pers.hd.simplepro.server.domain.model.dto.UsersDTO;
+import pers.hd.simplepro.server.domain.model.entity.Users;
+import pers.hd.simplepro.server.domain.model.params.UserParam;
+import pers.hd.simplepro.server.domain.model.query.UserQueryCriteria;
+import pers.hd.simplepro.server.domain.model.support.ResponseResult;
+import pers.hd.simplepro.server.domain.model.vo.UserPassVo;
+import pers.hd.simplepro.server.domain.service.RolesService;
+import pers.hd.simplepro.server.domain.service.UsersService;
+import pers.hd.simplepro.server.domain.service.assembler.UsersAssembler;
 import pers.hd.simplepro.server.util.RsaUtils;
 import pers.hd.simplepro.server.util.SecurityUtils;
 
@@ -81,15 +81,15 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> delete(@RequestBody Set<Long> ids) {
-        for (Long id : ids) {
+    public ResponseEntity<?> delete(@RequestBody Set<String> ids) {
+        for (String id : ids) {
             Integer currentLevel = Collections.min(roleService.findByUserId(SecurityUtils.getCurrentUserId()).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
             Integer optLevel = Collections.min(roleService.findByUserId(id).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
                 throw new BadRequestException("角色权限不足，不能删除：" + userService.find(id).getUserName());
             }
         }
-        for (Long id : ids) {
+        for (String id : ids) {
             userService.delete(id);
         }
         return ResponseResult.success(HttpStatus.OK);

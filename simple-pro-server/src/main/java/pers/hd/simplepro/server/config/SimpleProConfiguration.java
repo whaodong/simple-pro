@@ -11,14 +11,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @ComponentScan(basePackages = {
-        "pers.hd.simplepro.server.service.impl"
+        "pers.hd.simplepro.server.domain.service.impl"
 })
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {
-        "pers.hd.simplepro.server.dao",
+        "pers.hd.simplepro.server.domain.repository",
 })
 @EntityScan(basePackages = {
-        "pers.hd.simplepro.server.model.entity",
+        "pers.hd.simplepro.server.domain.model.entity",
 })
 public class SimpleProConfiguration {
 }

@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import pers.hd.simplepro.core.exception.UnauthorizedException;
+import pers.hd.simplepro.server.exception.UnauthorizedException;
 import pers.hd.simplepro.server.enums.DataScopeEnum;
 
 import java.util.List;
@@ -51,9 +51,9 @@ public class SecurityUtils {
      *
      * @return 系统用户ID
      */
-    public static Long getCurrentUserId() {
+    public static String getCurrentUserId() {
         UserDetails userDetails = getCurrentUser();
-        return new JSONObject(new JSONObject(userDetails).get("user")).get("id", Long.class);
+        return new JSONObject(new JSONObject(userDetails).get("user")).get("id", String.class);
     }
 
     /**

@@ -6,8 +6,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-import pers.hd.simplepro.core.exception.BadRequestException;
-import pers.hd.simplepro.core.util.CloseUtil;
+import pers.hd.simplepro.server.exception.BadRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -245,7 +244,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             log.error(e.getMessage(), e);
             return null;
         } finally {
-            pers.hd.simplepro.core.util.CloseUtil.close(in);
+            CloseUtil.close(in);
         }
         return b;
     }
