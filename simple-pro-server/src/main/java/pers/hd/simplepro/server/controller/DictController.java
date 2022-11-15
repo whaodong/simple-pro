@@ -6,12 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pers.hd.simplepro.server.exception.BadRequestException;
 import pers.hd.simplepro.server.domain.model.entity.Dicts;
 import pers.hd.simplepro.server.domain.model.query.DictQueryCriteria;
 import pers.hd.simplepro.server.domain.model.support.ResponseResult;
 import pers.hd.simplepro.server.domain.service.DictService;
-import pers.hd.simplepro.server.util.QueryHelp;
+import pers.hd.simplepro.server.exception.BadRequestException;
 
 import java.util.Set;
 
@@ -30,7 +29,7 @@ public class DictController {
 
     @GetMapping
     public ResponseEntity<?> query(DictQueryCriteria dict, Pageable pageable) {
-        return ResponseResult.success(dictService.findAll((root, query, cb) -> QueryHelp.getPredicate(root, query, cb, dict), pageable));
+        return ResponseResult.success(dictService.findAllByQueryAndPage(dict, pageable));
     }
 
     @PostMapping

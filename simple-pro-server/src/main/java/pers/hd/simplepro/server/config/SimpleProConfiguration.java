@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
+ * 项目扫描配置
+ *
  * @author WangHaoDong
  */
 @Configuration

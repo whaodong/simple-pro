@@ -29,7 +29,7 @@ public class DictDetailController {
     @GetMapping
     public ResponseEntity<?> query(DictDetailQueryCriteria criteria,
                                    @PageableDefault(sort = {"dictSort"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseResult.success(dictDetailService.f(criteria, pageable));
+        return ResponseResult.success(dictDetailService.findAllByQueryAndPage(criteria, pageable));
     }
 
     @GetMapping(value = "/map")

@@ -24,29 +24,25 @@ public interface BaseCrudService<T, ID extends Serializable, R extends BaseRepos
 
     T find(ID id);
 
-    boolean exists(ID id);
+    boolean existsById(ID id);
 
     List<T> findAll();
 
-    List<T> findAll(Sort sort);
+    Page<T> findAllByPage(Pageable pageable);
 
-    List<T> findAll(Specification<T> predicate);
+    List<T> findAllBySort(Sort sort);
 
-    Page<T> findAll(Pageable pageable);
+    <Q> List<T> findAllByQueryAndSort(Q criteria,Sort sort);
 
-    Page<T> findAll(@Nullable Specification<T> spec, Pageable pageable);
+    <Q> Page<T> findAllByQueryAndPage(Q criteria, Pageable pageable);
 
-   <Q> Page<T> f(Q criteria, Pageable pageable);
+    List<T> findAllByPredicate(Specification<T> predicate);
 
-    T update(ID id, T entity);
+    Page<T> findAllByPredicateAndPage(@Nullable Specification<T> spec, Pageable pageable);
 
     T update(T entity);
 
-    T update(T entity, T db);
-
     T save(T entity);
-
-    T saveOrUpdate(ID id, T t);
 
     void delete(ID id);
 

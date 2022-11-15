@@ -52,7 +52,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> query(UserQueryCriteria criteria,
                                    Pageable pageable) {
-        return ResponseResult.success(usersAssembler.convertToUsersDTO(userService.f(criteria, pageable)));
+        return ResponseResult.success(usersAssembler.convertToUsersDTO(userService.findAllByQueryAndPage(criteria, pageable)));
     }
 
     @PostMapping

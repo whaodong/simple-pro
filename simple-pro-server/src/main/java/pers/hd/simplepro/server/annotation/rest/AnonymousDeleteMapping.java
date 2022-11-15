@@ -8,8 +8,17 @@ import pers.hd.simplepro.server.annotation.AnonymousAccess;
 import java.lang.annotation.*;
 
 /**
- * 标记放行的接口
- * @author Administrator
+ * 标记放行的Delete请求接口 例如:
+ * <pre>
+ *    {@code
+ *    @AnonymousDeleteMapping
+ *     public ResponseEntity<?> demo() {
+ *         return ResponseResult.success("ok");
+ *     }}
+ * </pre>
+ * 可以直接放行该接口访问
+ *
+ * @author wanghaodong
  */
 @AnonymousAccess
 @Target(ElementType.METHOD)

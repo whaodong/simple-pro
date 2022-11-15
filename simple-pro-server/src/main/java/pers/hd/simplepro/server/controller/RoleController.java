@@ -42,7 +42,7 @@ public class RoleController {
 
     @GetMapping
     public ResponseEntity<?> query(RoleQueryCriteria criteria, Pageable pageable) {
-        return ResponseResult.success(roleService.f(criteria, pageable));
+        return ResponseResult.success(roleService.findAllByQueryAndPage(criteria, pageable));
     }
 
     @GetMapping(value = "/level")
