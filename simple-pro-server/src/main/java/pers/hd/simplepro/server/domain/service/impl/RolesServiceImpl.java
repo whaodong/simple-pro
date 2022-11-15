@@ -5,20 +5,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import pers.hd.simplepro.server.domain.model.dto.RolesDTO;
-import pers.hd.simplepro.server.exception.BadRequestException;
-import pers.hd.simplepro.server.domain.repository.MenusRepository;
-import pers.hd.simplepro.server.domain.repository.RolesRepository;
-import pers.hd.simplepro.server.domain.repository.RolesMenusRepository;
-import pers.hd.simplepro.server.domain.repository.UsersRepository;
-import pers.hd.simplepro.server.domain.service.base.AbstractCrudService;
+import pers.hd.simplepro.server.domain.model.dto.AuthorityDTO;
 import pers.hd.simplepro.server.domain.model.dto.RoleSmallDTO;
+import pers.hd.simplepro.server.domain.model.dto.RolesDTO;
 import pers.hd.simplepro.server.domain.model.dto.UsersDTO;
 import pers.hd.simplepro.server.domain.model.entity.Menus;
 import pers.hd.simplepro.server.domain.model.entity.Roles;
 import pers.hd.simplepro.server.domain.model.entity.RolesMenus;
 import pers.hd.simplepro.server.domain.model.params.RolesParam;
+import pers.hd.simplepro.server.domain.repository.MenusRepository;
+import pers.hd.simplepro.server.domain.repository.RolesMenusRepository;
+import pers.hd.simplepro.server.domain.repository.RolesRepository;
+import pers.hd.simplepro.server.domain.repository.UsersRepository;
 import pers.hd.simplepro.server.domain.service.RolesService;
+import pers.hd.simplepro.server.domain.service.base.AbstractCrudService;
+import pers.hd.simplepro.server.exception.BadRequestException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class RolesServiceImpl extends AbstractCrudService<Roles, String, RolesRe
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                 .map(Menus::getPermission)
                 .filter(StringUtils::isNotBlank).collect(Collectors.toSet());
-        return permissions.stream().map(AuthorityDto::new)
+        return permissions.stream().map(AuthorityDTO::new)
                 .collect(Collectors.toList());
     }
 
