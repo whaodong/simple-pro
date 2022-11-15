@@ -43,7 +43,7 @@ public class DictController {
 
     @PutMapping
     public ResponseEntity<?> update(@Validated @RequestBody Dicts resources) {
-        dictService.update(resources.getId(), resources);
+        dictService.update(resources);
         return ResponseResult.success(HttpStatus.NO_CONTENT);
     }
 

@@ -63,7 +63,7 @@ public class RoleController {
     @PutMapping
     public ResponseEntity<?> update(@Validated @RequestBody Roles resources) {
         getLevels(resources.getLevel());
-        roleService.update(resources.getId(), resources);
+        roleService.update(resources);
         return ResponseResult.success(HttpStatus.NO_CONTENT);
     }
 
