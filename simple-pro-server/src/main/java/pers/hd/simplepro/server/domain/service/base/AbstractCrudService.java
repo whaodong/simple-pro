@@ -88,6 +88,11 @@ public abstract class AbstractCrudService<T, ID extends Serializable, R extends 
     }
 
     @Override
+    public List<T> findAllByIds(Collection<ID> ids) {
+        return CollectionUtils.isEmpty(ids) ? Collections.emptyList() : baseRepository.findAllById(ids);
+    }
+
+    @Override
     public <Q> List<T> findAllByQueryAndSort(Q criteria, Sort sort) {
         return baseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, query, cb, criteria), sort);
     }
@@ -124,7 +129,26 @@ public abstract class AbstractCrudService<T, ID extends Serializable, R extends 
     }
 
     @Override
-    public List<T> createInBatch(Collection<T> domains) {
+    public void delete(T entity) {
+        baseRepository.delete(entity);
+    }
+
+    @Override
+    public void deleteAll(Collection<T> domains) {
+        if (CollectionUtils.isEmpty(domains)) {
+            log.debug(domainName + " collection is empty");
+            return;
+        }
+        baseRepository.deleteInBatch(domains);
+    }
+
+    @Override
+    public void deleteAll() {
+        baseRepository.deleteAll();
+    }
+
+    @Override
+    public List<T> saveInBatch(Collection<T> domains) {
         return CollectionUtils.isEmpty(domains) ? Collections.emptyList() :
                 baseRepository.saveAll(domains);
     }
@@ -142,5 +166,10 @@ public abstract class AbstractCrudService<T, ID extends Serializable, R extends 
             return;
         }
         baseRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public long count() {
+        return baseRepository.count();
     }
 }
