@@ -52,7 +52,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> query(UserQueryCriteria criteria,
                                    Pageable pageable) {
-        return ResponseResult.success(usersAssembler.convertToUsersDTO(userService.f(criteria, pageable)));
+        return ResponseResult.success(usersAssembler.convertToUsersDTO(userService.findAllByQueryAndPage(criteria, pageable)));
     }
 
     @PostMapping
@@ -76,7 +76,7 @@ public class UserController {
         if (!resources.getId().equals(SecurityUtils.getCurrentUserId())) {
             throw new BadRequestException("不能修改他人资料");
         }
-        userService.update(resources.getId(), resources);
+        userService.update(resources);
         return ResponseResult.success(HttpStatus.NO_CONTENT);
     }
 

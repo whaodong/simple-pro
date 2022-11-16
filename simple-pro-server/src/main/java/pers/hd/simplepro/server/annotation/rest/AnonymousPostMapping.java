@@ -7,6 +7,19 @@ import pers.hd.simplepro.server.annotation.AnonymousAccess;
 
 import java.lang.annotation.*;
 
+/**
+ * 标记放行的POST请求接口 例如:
+ * <pre>
+ *    {@code
+ *    @AnonymousPostMapping
+ *     public ResponseEntity<?> demo() {
+ *         return ResponseResult.success("ok");
+ *     }}
+ * </pre>
+ * 可以直接放行该接口访问
+ *
+ * @author wanghaodong
+ */
 @AnonymousAccess
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

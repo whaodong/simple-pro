@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 
 /**
+ * rsa属性类
+ *
  * @author wanghaodong
  */
 @Data

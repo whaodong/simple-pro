@@ -1,15 +1,12 @@
 package pers.hd.simplepro.server.domain.service.base;
 
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import pers.hd.simplepro.server.domain.repository.base.BaseRepository;
@@ -63,96 +60,66 @@ public abstract class AbstractCrudService<T, ID extends Serializable, R extends 
     }
 
     @Override
-    public boolean exists(ID id) {
-        log.info("进入 exists 判断");
+    public boolean existsById(ID id) {
         Assert.notNull(id, domainName + " Id 信息不能为空");
-        boolean result = baseRepository.existsById(id);
-
-        log.info(String.format("退出 exists 判断 %s id:%s 返回:%s", domainName, id, result));
-        return result;
+        return baseRepository.existsById(id);
     }
 
     @Override
     public T update(T entity) {
+        Assert.notNull(entity, domainName + " data must not be null");
         return baseRepository.saveAndFlush(entity);
     }
 
     @Override
     public T find(ID id) {
-        log.info("进入 find 查询");
         Assert.notNull(id, domainName + " Id信息不能为空");
-        T result = baseRepository.findById(id).orElse(null);
-        log.info(String.format("退出 find 查询 %s id:%s 返回:%s", domainName, id, result));
-        return result;
+        return baseRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<T> findAll() {
-        log.info("进入 findAll 查询");
-        List<T> result = baseRepository.findAll();
-        log.info(String.format("退出 findAll 查询  返回:%s条数据", result.size()));
-        return result;
+        return baseRepository.findAll();
     }
 
     @Override
-    public List<T> findAll(Sort sort) {
-        log.info("进入 findAll 查询");
-        List<T> result = Lists.newArrayList(baseRepository.findAll(sort));
-        log.info(String.format("退出 findAll 查询  返回:%s条数据", result.size()));
-        return result;
+    public List<T> findAllBySort(Sort sort) {
+        return baseRepository.findAll(sort);
     }
 
     @Override
-    public List<T> findAll(Specification<T> predicate) {
-        return Lists.newArrayList(baseRepository.findAll(predicate));
+    public List<T> findAllByIds(Collection<ID> ids) {
+        return CollectionUtils.isEmpty(ids) ? Collections.emptyList() : baseRepository.findAllById(ids);
     }
 
     @Override
-    public Page<T> findAll(Pageable pageable) {
+    public <Q> List<T> findAllByQueryAndSort(Q criteria, Sort sort) {
+        return baseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, query, cb, criteria), sort);
+    }
+
+    @Override
+    public Page<T> findAllByPage(Pageable pageable) {
         return baseRepository.findAll(pageable);
     }
 
     @Override
-    public Page<T> findAll(@Nullable Specification<T> spec, Pageable pageable) {
+    public List<T> findAllByPredicate(Specification<T> predicate) {
+        return baseRepository.findAll(predicate);
+    }
+
+    @Override
+    public Page<T> findAllByPredicateAndPage(@Nullable Specification<T> spec, Pageable pageable) {
         return baseRepository.findAll(spec, pageable);
     }
 
     @Override
-    public <Q> Page<T> f(Q criteria, Pageable pageable) {
+    public <Q> Page<T> findAllByQueryAndPage(Q criteria, Pageable pageable) {
         return baseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, query, cb, criteria), pageable);
-    }
-
-
-    @Override
-    public T update(ID id, T entity) {
-        T result = update(baseRepository, id, entity);
-        return result;
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public T update(T entity, T tdb) {
-        BeanUtils.copyProperties(entity, tdb);
-        return tdb;
     }
 
     @Override
     public T save(T entity) {
-        T result = save(baseRepository, entity);
-
-        return result;
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public T saveOrUpdate(ID id, T t) {
-        if (id != null) {
-            T db = find(id);
-            if (db != null) {
-                return update(id, t);
-            }
-        }
-        return save(t);
+        return baseRepository.save(entity);
     }
 
     @SuppressWarnings("all")
@@ -161,19 +128,27 @@ public abstract class AbstractCrudService<T, ID extends Serializable, R extends 
         baseRepository.deleteById(id);
     }
 
-    private <TT, TID extends Serializable> TT update(BaseRepository<TT, TID> baseRepository, TID id, TT entity) {
-        TT tdb = baseRepository.findById(id).orElse(null);
-        BeanUtils.copyProperties(entity, tdb);
-        return tdb;
-    }
-
-    private <TT, TID extends Serializable> TT save(BaseRepository<TT, TID> baseRepository, TT entity) {
-        TT result = baseRepository.save(entity);
-        return result;
+    @Override
+    public void delete(T entity) {
+        baseRepository.delete(entity);
     }
 
     @Override
-    public List<T> createInBatch(Collection<T> domains) {
+    public void deleteAll(Collection<T> domains) {
+        if (CollectionUtils.isEmpty(domains)) {
+            log.debug(domainName + " collection is empty");
+            return;
+        }
+        baseRepository.deleteInBatch(domains);
+    }
+
+    @Override
+    public void deleteAll() {
+        baseRepository.deleteAll();
+    }
+
+    @Override
+    public List<T> saveInBatch(Collection<T> domains) {
         return CollectionUtils.isEmpty(domains) ? Collections.emptyList() :
                 baseRepository.saveAll(domains);
     }
@@ -191,5 +166,10 @@ public abstract class AbstractCrudService<T, ID extends Serializable, R extends 
             return;
         }
         baseRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public long count() {
+        return baseRepository.count();
     }
 }

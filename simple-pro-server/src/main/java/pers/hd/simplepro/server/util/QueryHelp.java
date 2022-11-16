@@ -6,7 +6,6 @@ import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import pers.hd.simplepro.server.annotation.DataPermission;
 import pers.hd.simplepro.server.annotation.SimpleQuery;
-import pers.hd.simplepro.server.domain.model.entity.BaseEntity;
 
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
@@ -59,8 +58,6 @@ public class QueryHelp {
                 SimpleQuery q = field.getAnnotation(SimpleQuery.class);
                 if (q != null) {
                     String propName = q.propName();
-                    Class<? extends BaseEntity> formTable = q.formTable();
-                    String formPropName = q.formPropName();
                     String blurry = q.blurry();
                     String attributeName = isBlank(propName) ? field.getName() : propName;
                     Class<?> fieldType = field.getType();

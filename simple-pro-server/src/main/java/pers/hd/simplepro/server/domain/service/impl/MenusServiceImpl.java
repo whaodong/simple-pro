@@ -57,7 +57,7 @@ public class MenusServiceImpl extends AbstractCrudService<Menus, String, MenusRe
                 }
             }
         }
-        return this.f(criteria, pageable);
+        return this.findAllByQueryAndPage(criteria, pageable);
     }
 
     @Override

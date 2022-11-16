@@ -42,7 +42,7 @@ public class RoleController {
 
     @GetMapping
     public ResponseEntity<?> query(RoleQueryCriteria criteria, Pageable pageable) {
-        return ResponseResult.success(roleService.f(criteria, pageable));
+        return ResponseResult.success(roleService.findAllByQueryAndPage(criteria, pageable));
     }
 
     @GetMapping(value = "/level")
@@ -63,7 +63,7 @@ public class RoleController {
     @PutMapping
     public ResponseEntity<?> update(@Validated @RequestBody Roles resources) {
         getLevels(resources.getLevel());
-        roleService.update(resources.getId(), resources);
+        roleService.update(resources);
         return ResponseResult.success(HttpStatus.NO_CONTENT);
     }
 

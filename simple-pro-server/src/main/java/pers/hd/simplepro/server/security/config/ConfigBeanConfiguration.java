@@ -8,7 +8,7 @@ import pers.hd.simplepro.server.security.model.LoginProperties;
 import pers.hd.simplepro.server.security.model.SecurityProperties;
 
 /**
- * 配置文件转换Pojo类的 统一配置 类
+ * 配置文件转换Pojo类的 统一配置类
  *
  * @author WangHaoDong
  */
