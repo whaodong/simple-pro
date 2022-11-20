@@ -2,8 +2,12 @@ package pers.hd.simplepro.server.domain.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author WangHaoDong
@@ -13,8 +17,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "sys_users_roles")
 public class UsersRoles {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "user_uuid", strategy = "uuid")
     @Column(name = "id")
     private String id;
 

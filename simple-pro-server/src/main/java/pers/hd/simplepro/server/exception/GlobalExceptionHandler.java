@@ -27,8 +27,18 @@ public class GlobalExceptionHandler {
     /**
      * 处理所有不可知的异常
      */
-    @ExceptionHandler(Throwable.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Throwable e) {
+        // 打印堆栈信息
+        log.error(getStackTrace(e));
+        return ResponseResult.fail(e.getMessage());
+    }
+
+    /**
+     * 处理所有不可知的异常
+     */
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<?> handleException(Exception e) {
         // 打印堆栈信息
         log.error(getStackTrace(e));
         return ResponseResult.fail(e.getMessage());

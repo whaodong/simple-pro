@@ -2,8 +2,12 @@ package pers.hd.simplepro.server.domain.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -17,7 +21,7 @@ public class Dept extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "dept_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "user_uuid", strategy = "uuid")
     private Long id;
 
     private Integer deptSort;

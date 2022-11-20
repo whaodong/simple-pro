@@ -3,9 +3,13 @@ package pers.hd.simplepro.server.domain.model.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import pers.hd.simplepro.server.enums.DataScopeEnum;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -20,7 +24,7 @@ public class Roles extends BaseEntity {
 
     @Id
     @Column(name = "role_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "user_uuid", strategy = "uuid")
     private String id;
 
     @NotBlank

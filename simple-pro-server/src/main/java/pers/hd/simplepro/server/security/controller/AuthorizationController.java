@@ -19,6 +19,7 @@ import pers.hd.simplepro.server.annotation.rest.AnonymousDeleteMapping;
 import pers.hd.simplepro.server.annotation.rest.AnonymousGetMapping;
 import pers.hd.simplepro.server.annotation.rest.AnonymousPostMapping;
 import pers.hd.simplepro.server.config.RsaProperties;
+import pers.hd.simplepro.server.domain.model.support.ResponseResult;
 import pers.hd.simplepro.server.security.config.TokenProvider;
 import pers.hd.simplepro.server.security.model.LoginCodeEnum;
 import pers.hd.simplepro.server.security.model.LoginProperties;
@@ -53,7 +54,7 @@ public class AuthorizationController {
     private LoginProperties loginProperties;
 
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
         // 查询验证码
@@ -90,16 +91,16 @@ public class AuthorizationController {
             //踢掉之前已经登录的token
             onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
         }
-        return ResponseEntity.ok(authInfo);
+        return ResponseResult.success(authInfo);
     }
 
     @GetMapping(value = "/info")
-    public ResponseEntity<Object> getUserInfo() {
-        return ResponseEntity.ok(SecurityUtils.getCurrentUser());
+    public ResponseEntity<?> getUserInfo() {
+        return ResponseResult.success(SecurityUtils.getCurrentUser());
     }
 
     @AnonymousGetMapping(value = "/code")
-    public ResponseEntity<Object> getCode() {
+    public ResponseEntity<?> getCode() {
         // 获取运算的结果
         Captcha captcha = loginProperties.getCaptcha();
         String uuid = properties.getCodeKey() + IdUtil.simpleUUID();
@@ -115,12 +116,12 @@ public class AuthorizationController {
             put("img", captcha.toBase64());
             put("uuid", uuid);
         }};
-        return ResponseEntity.ok(imgResult);
+        return ResponseResult.success(imgResult);
     }
 
     @AnonymousDeleteMapping(value = "/logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         onlineUserService.logout(tokenProvider.getToken(request));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseResult.success(HttpStatus.OK);
     }
 }
