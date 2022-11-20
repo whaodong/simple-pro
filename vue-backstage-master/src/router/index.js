@@ -26,7 +26,7 @@ router.beforeEach((to, from, next) => {
         store.dispatch('GetInfo').then(() => { // 拉取user_info
           // 动态路由，拉取菜单
           loadMenus(next, to)
-        }).catch(() => {
+        }).catch((es) => {
           store.dispatch('LogOut').then(() => {
             location.reload() // 为了重新实例化vue-router对象 避免bug
           })

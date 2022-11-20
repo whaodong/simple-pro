@@ -33,7 +33,11 @@ public interface MenusRepository extends BaseRepository<Menus, String> {
      */
     @Query(value = "SELECT m.* FROM sys_menu m, sys_roles_menus r WHERE " +
             "m.menu_id = r.menu_id AND r.role_id IN ?1 AND type != ?2 order by m.menu_sort asc",nativeQuery = true)
-    LinkedHashSet<Menus> findByRoleIdsAndTypeNot(Set<String> roleIds, int type);
+    List<Menus> findByRoleIdsAndTypeNot(Set<String> roleIds, int type);
+
+    @Query(value = "SELECT m.* FROM sys_menu m, sys_roles_menus r WHERE " +
+            "m.menu_id = r.menu_id AND r.role_id = ?1 AND type != 2 order by m.menu_sort asc",nativeQuery = true)
+    List<Menus> findByRoleId(String roleId);
 
     /**
      * 更新节点数目
@@ -46,5 +50,7 @@ public interface MenusRepository extends BaseRepository<Menus, String> {
 
     int countByPid(String pId);
 
+    @Query(value = "SELECT * FROM sys_menu WHERE type != ?1 order by menu_sort asc",nativeQuery = true)
+    LinkedHashSet<Menus> findByType(int type);
 
 }

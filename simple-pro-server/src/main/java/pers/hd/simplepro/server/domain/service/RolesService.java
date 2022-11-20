@@ -33,4 +33,8 @@ public interface RolesService extends BaseCrudService<Roles, String, RolesReposi
     void updateMenu(RolesParam roleParam);
 
     void verification(Set<String> ids);
+
+   List<RolesDTO> convertToDto(List<Roles> rolesList);
+   RolesDTO convertToDto(Roles rolesList);
+
 }

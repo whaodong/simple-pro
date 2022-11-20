@@ -144,7 +144,7 @@ export default {
   data() {
     return {
       tableHeight: window.innerHeight - 222.5 - 42 - 30,
-      defaultProps: { children: 'children', label: 'label', isLeaf: 'leaf' },
+      defaultProps: { children: 'children', label: 'title', isLeaf: 'leaf' },
       level: 3,
       currentId: 0, menuLoading: false, showButton: false,
       menus: [], menuIds: [], depts: [], deptDatas: [], // 多选时使用
@@ -172,7 +172,7 @@ export default {
     getMenuDatas(node, resolve) {
       setTimeout(() => {
         getMenusTree(node.data.id ? node.data.id : 0).then(res => {
-          resolve(res)
+          resolve(res.content)
         })
       }, 100)
     },
@@ -201,6 +201,7 @@ export default {
     },
     // 触发单选
     handleCurrentChange(val) {
+      debugger
       if (val) {
         const _this = this
         // 清空菜单的选中

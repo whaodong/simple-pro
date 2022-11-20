@@ -12,11 +12,11 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class MenuDTO implements OutputConverter<MenuDTO, Menus> {
+public class MenusDTO implements OutputConverter<MenusDTO, Menus> {
 
     private String id;
 
-    private List<MenuDTO> children;
+    private List<MenusDTO> children;
 
     private Integer type;
 
@@ -66,7 +66,7 @@ public class MenuDTO implements OutputConverter<MenuDTO, Menus> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        MenuDTO menuDto = (MenuDTO) o;
+        MenusDTO menuDto = (MenusDTO) o;
         return Objects.equals(id, menuDto.id);
     }
 

@@ -88,6 +88,8 @@ public interface BaseCrudService<T, ID extends Serializable, R extends BaseRepos
      */
     <Q> List<T> findAllByQueryAndSort(Q criteria, Sort sort);
 
+    <Q> List<T> findAllByQuery(Q criteria);
+
     /**
      * 条件查询分页
      *

@@ -2,22 +2,24 @@ package pers.hd.simplepro.server.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pers.hd.simplepro.server.exception.BadRequestException;
-import pers.hd.simplepro.server.domain.model.dto.MenuDTO;
+import pers.hd.simplepro.server.domain.model.dto.MenusDTO;
 import pers.hd.simplepro.server.domain.model.entity.Menus;
 import pers.hd.simplepro.server.domain.model.params.MenusParam;
 import pers.hd.simplepro.server.domain.model.query.MenuQueryCriteria;
 import pers.hd.simplepro.server.domain.model.support.ResponseResult;
 import pers.hd.simplepro.server.domain.service.MenusService;
+import pers.hd.simplepro.server.exception.BadRequestException;
 import pers.hd.simplepro.server.util.SecurityUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -30,9 +32,14 @@ public class MenuController {
     private static final String ENTITY_NAME = "menu";
 
     @GetMapping(value = "/build")
-    public ResponseEntity<?> buildMenus() throws Exception {
-        List<MenuDTO> menuDtoList = menuService.findByUser(SecurityUtils.getCurrentUserId());
-        List<MenuDTO> menuDtos = menuService.buildTree(menuDtoList);
+    public ResponseEntity<?> buildMenus() {
+        List<MenusDTO> menuDtoList;
+        if ("admin".equals(SecurityUtils.getCurrentUsername())) {
+            menuDtoList = menuService.getRepository().findByType(2).stream().map(item -> (MenusDTO) new MenusDTO().convertFrom(item)).collect(Collectors.toList());
+        } else {
+            menuDtoList = menuService.findByUser(SecurityUtils.getCurrentUserId());
+        }
+        List<MenusDTO> menuDtos = menuService.buildTree(menuDtoList);
         return ResponseResult.success(menuService.buildMenus(menuDtos));
     }
 
@@ -43,31 +50,31 @@ public class MenuController {
 
     @GetMapping(value = "/child")
     public ResponseEntity<?> child(@RequestParam String id) {
-        Set<Menus> menuSet = new HashSet<>();
+        List<MenusDTO> menuSet = new ArrayList<>();
         List<Menus> menuList = menuService.getMenus(id);
-        menuSet.add(menuService.find(id));
+        menuSet.add(new MenusDTO().convertFrom(menuService.find(id)));
         menuSet = menuService.getChildMenus(menuList, menuSet);
-        Set<String> ids = menuSet.stream().map(Menus::getId).collect(Collectors.toSet());
+        Set<String> ids = menuSet.stream().map(MenusDTO::getId).collect(Collectors.toSet());
         return ResponseResult.success(ids);
     }
 
     @GetMapping
     public ResponseEntity<?> query(MenuQueryCriteria criteria,
                                    Pageable pageable) throws Exception {
-        Page<Menus> menuDtoList = menuService.queryAll(criteria, true, pageable);
-        menuDtoList.map(menus -> new MenuDTO().convertFrom(menus));
-        return ResponseResult.success(menuDtoList);
+        List<Menus> menuDtoList = menuService.findAllByQuery(criteria);
+        List<MenusDTO> collect = menuDtoList.stream().map(menus -> (MenusDTO)new MenusDTO().convertFrom(menus)).collect(Collectors.toList());
+        return ResponseResult.success(menuService.buildTree(collect));
     }
 
     @PostMapping("/superior")
     public ResponseEntity<?> getSuperior(@RequestBody List<String> ids) {
-        Set<MenuDTO> menuDtos = new LinkedHashSet<>();
+        Set<MenusDTO> menuDtos = new LinkedHashSet<>();
         if (CollectionUtil.isNotEmpty(ids)) {
             for (String id : ids) {
-                MenuDTO menuDto = menuService.findById(id);
+                MenusDTO menuDto = menuService.findById(id);
                 menuDtos.addAll(menuService.getSuperior(menuDto, new ArrayList<>()));
             }
-            return new ResponseEntity<>(menuService.buildTree(new ArrayList<>(menuDtos)), HttpStatus.OK);
+            return ResponseResult.success(menuService.buildTree(new ArrayList<>(menuDtos)));
         }
         return ResponseResult.success(menuService.getMenus(null));
     }
@@ -89,10 +96,10 @@ public class MenuController {
 
     @DeleteMapping
     public ResponseEntity<?> delete(@RequestBody Set<String> ids) {
-        Set<Menus> menuSet = new HashSet<>();
+        List<MenusDTO> menuSet = new ArrayList<>();
         for (String id : ids) {
             List<Menus> menuList = menuService.getMenus(id);
-            menuSet.add(menuService.find(id));
+            menuSet.add(new MenusDTO().convertFrom(menuService.find(id)));
             menuSet = menuService.getChildMenus(menuList, menuSet);
         }
         menuService.delete(menuSet);

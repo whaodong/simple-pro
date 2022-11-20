@@ -271,25 +271,26 @@ export default {
       const params = { pid: tree.id }
       setTimeout(() => {
         crudMenu.getMenus(params).then(res => {
+          debugger
           resolve(res.content)
         })
       }, 100)
     },
     getSupDepts(id) {
-      crudMenu.getMenuSuperior(id).then(res => {
-        const children = res.map(function(obj) {
-          if (!obj.leaf && !obj.children) {
-            obj.children = null
-          }
-          return obj
-        })
-        this.menus = [{ id: 0, label: '顶级类目', children: children }]
-      })
+      // crudMenu.getMenuSuperior(id).then(res => {
+      //   const children = res.content.map(function(obj) {
+      //     if (!obj.leaf && !obj.children) {
+      //       obj.children = null
+      //     }
+      //     return obj
+      //   })
+      //   this.menus = [{ id: 0, label: '顶级类目', children: children }]
+      // })
     },
     loadMenus({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) {
         crudMenu.getMenusTree(parentNode.id).then(res => {
-          parentNode.children = res.map(function(obj) {
+          parentNode.children = res.content.map(function(obj) {
             if (!obj.leaf) {
               obj.children = null
             }

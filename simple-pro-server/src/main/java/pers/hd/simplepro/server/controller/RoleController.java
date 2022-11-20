@@ -2,18 +2,21 @@ package pers.hd.simplepro.server.controller;
 
 import cn.hutool.core.lang.Dict;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pers.hd.simplepro.server.exception.BadRequestException;
 import pers.hd.simplepro.server.domain.model.dto.RoleSmallDTO;
 import pers.hd.simplepro.server.domain.model.entity.Roles;
 import pers.hd.simplepro.server.domain.model.params.RolesParam;
 import pers.hd.simplepro.server.domain.model.query.RoleQueryCriteria;
 import pers.hd.simplepro.server.domain.model.support.ResponseResult;
+import pers.hd.simplepro.server.domain.service.MenusService;
 import pers.hd.simplepro.server.domain.service.RolesService;
+import pers.hd.simplepro.server.domain.service.UsersService;
+import pers.hd.simplepro.server.exception.BadRequestException;
 import pers.hd.simplepro.server.util.SecurityUtils;
 
 import java.util.Collections;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 public class RoleController {
 
     private final RolesService roleService;
+    private final MenusService menusService;
+    private final UsersService usersService;
 
     private static final String ENTITY_NAME = "role";
 
@@ -42,7 +47,8 @@ public class RoleController {
 
     @GetMapping
     public ResponseEntity<?> query(RoleQueryCriteria criteria, Pageable pageable) {
-        return ResponseResult.success(roleService.findAllByQueryAndPage(criteria, pageable));
+        Page<Roles> page = roleService.findAllByQueryAndPage(criteria, pageable);
+        return ResponseResult.success(roleService.convertToDto(page.getContent()));
     }
 
     @GetMapping(value = "/level")

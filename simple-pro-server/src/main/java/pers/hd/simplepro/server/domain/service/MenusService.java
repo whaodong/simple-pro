@@ -1,30 +1,17 @@
 package pers.hd.simplepro.server.domain.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import pers.hd.simplepro.server.domain.service.base.BaseCrudService;
-import pers.hd.simplepro.server.domain.repository.MenusRepository;
-import pers.hd.simplepro.server.domain.model.dto.MenuDTO;
+import pers.hd.simplepro.server.domain.model.dto.MenusDTO;
 import pers.hd.simplepro.server.domain.model.entity.Menus;
 import pers.hd.simplepro.server.domain.model.params.MenusParam;
-import pers.hd.simplepro.server.domain.model.query.MenuQueryCriteria;
+import pers.hd.simplepro.server.domain.repository.MenusRepository;
+import pers.hd.simplepro.server.domain.service.base.BaseCrudService;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author WangHaoDong
  */
 public interface MenusService extends BaseCrudService<Menus, String, MenusRepository> {
-    /**
-     * 查询全部数据
-     *
-     * @param criteria 条件
-     * @param isQuery  /
-     * @return /
-     * @throws Exception /
-     */
-    Page<Menus> queryAll(MenuQueryCriteria criteria, Boolean isQuery, Pageable pageable) throws Exception;
 
     /**
      * 根据ID查询
@@ -32,7 +19,7 @@ public interface MenusService extends BaseCrudService<Menus, String, MenusReposi
      * @param id /
      * @return /
      */
-    MenuDTO findById(String id);
+    MenusDTO findById(String id);
 
     /**
      * 创建
@@ -55,7 +42,7 @@ public interface MenusService extends BaseCrudService<Menus, String, MenusReposi
      * @param menuSet  /
      * @return /
      */
-    Set<Menus> getChildMenus(List<Menus> menuList, Set<Menus> menuSet);
+    List<MenusDTO> getChildMenus(List<Menus> menuList, List<MenusDTO> menuSet);
 
     /**
      * 构建菜单树
@@ -63,7 +50,7 @@ public interface MenusService extends BaseCrudService<Menus, String, MenusReposi
      * @param menuDtos 原始数据
      * @return /
      */
-    List<MenuDTO> buildTree(List<MenuDTO> menuDtos);
+    List<MenusDTO> buildTree(List<MenusDTO> menuDtos);
 
     /**
      * 构建菜单树
@@ -71,14 +58,14 @@ public interface MenusService extends BaseCrudService<Menus, String, MenusReposi
      * @param menuDtos /
      * @return /
      */
-    Object buildMenus(List<MenuDTO> menuDtos);
+    Object buildMenus(List<MenusDTO> menuDtos);
 
     /**
      * 删除
      *
      * @param menuSet /
      */
-    void delete(Set<Menus> menuSet);
+    void delete(List<MenusDTO> menus);
 
     /**
      * 懒加载菜单数据
@@ -95,7 +82,7 @@ public interface MenusService extends BaseCrudService<Menus, String, MenusReposi
      * @param objects /
      * @return /
      */
-    List<MenuDTO> getSuperior(MenuDTO menuDto, List<Menus> objects);
+    List<MenusDTO> getSuperior(MenusDTO menuDto, List<Menus> objects);
 
-    List<MenuDTO> findByUser(String currentUserId);
+    List<MenusDTO> findByUser(String currentUserId);
 }

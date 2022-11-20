@@ -98,6 +98,11 @@ public abstract class AbstractCrudService<T, ID extends Serializable, R extends 
     }
 
     @Override
+    public <Q> List<T> findAllByQuery(Q criteria) {
+        return baseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, query, cb, criteria));
+    }
+
+    @Override
     public Page<T> findAllByPage(Pageable pageable) {
         return baseRepository.findAll(pageable);
     }

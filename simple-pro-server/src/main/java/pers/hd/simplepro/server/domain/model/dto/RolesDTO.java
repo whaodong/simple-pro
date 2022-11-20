@@ -2,13 +2,11 @@ package pers.hd.simplepro.server.domain.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import pers.hd.simplepro.server.domain.model.entity.Menus;
 import pers.hd.simplepro.server.domain.model.entity.Roles;
-import pers.hd.simplepro.server.domain.model.entity.Users;
 import pers.hd.simplepro.server.domain.model.support.base.OutputConverter;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -16,9 +14,9 @@ public class RolesDTO implements OutputConverter<RolesDTO, Roles> {
 
     private String id;
 
-    private Set<Users> users;
+    private List<UsersDTO> users;
 
-    private Set<Menus> menus;
+    private List<MenusDTO> menus;
 
     private String name;
 
